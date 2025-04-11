@@ -4,7 +4,7 @@ FROM eclipse-temurin:21-jdk
 WORKDIR /app
 
 # Copy the Gradle/Maven files first to leverage Docker cache
-COPY build.gradle settings.gradle gradlew ./
+COPY build.gradle.kts settings.gradle.kts gradlew ./
 COPY gradle ./gradle
 
 # Download dependencies (this step gets cached unless build files change)
