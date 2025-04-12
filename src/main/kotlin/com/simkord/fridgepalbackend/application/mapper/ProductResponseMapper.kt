@@ -1,5 +1,6 @@
-package com.simkord.fridgepalbackend.application.response
+package com.simkord.fridgepalbackend.application.mapper
 
+import com.simkord.fridgepalbackend.application.response.ProductResponse
 import com.simkord.fridgepalbackend.service.model.Product
 
 fun List<Product>.toProductResponseList(): MutableList<ProductResponse> {

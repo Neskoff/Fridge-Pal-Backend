@@ -33,5 +33,5 @@ interface ProductsController {
             ),
         ],
     )
-    fun getProducts(): ResponseEntity<List<ProductResponse>>
+    fun getProducts(): ResponseEntity<MutableList<ProductResponse>>
 }

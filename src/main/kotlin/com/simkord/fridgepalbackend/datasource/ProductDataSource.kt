@@ -1,8 +1,10 @@
 package com.simkord.fridgepalbackend.datasource
 
+import com.github.michaelbull.result.Result
 import com.simkord.fridgepalbackend.datasource.database.entity.ProductEntity
+import com.simkord.fridgepalbackend.datasource.database.model.DatasourceError
 
 interface ProductDataSource {
 
-    fun getProducts(): MutableList<ProductEntity>
+    fun getProducts(): Result<MutableList<ProductEntity>, DatasourceError>
 }

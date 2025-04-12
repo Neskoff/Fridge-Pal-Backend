@@ -1,7 +1,9 @@
 package com.simkord.fridgepalbackend.application.controller
 
+import com.github.michaelbull.result.fold
+import com.simkord.fridgepalbackend.application.exception.FridgePalException
+import com.simkord.fridgepalbackend.application.mapper.toProductResponseList
 import com.simkord.fridgepalbackend.application.response.ProductResponse
-import com.simkord.fridgepalbackend.application.response.toProductResponseList
 import com.simkord.fridgepalbackend.service.ProductService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -16,7 +18,11 @@ class ProductsRestController(
 ) : ProductsController {
 
     @GetMapping
-    override fun getProducts(): ResponseEntity<List<ProductResponse>> {
-        return ResponseEntity(productService.getProducts().toProductResponseList(), HttpStatus.OK)
+    override fun getProducts(): ResponseEntity<MutableList<ProductResponse>> {
+        val response = productService.getProducts().fold(
+            success = { ResponseEntity(it.toProductResponseList(), HttpStatus.OK) },
+            failure = { throw FridgePalException(HttpStatus.valueOf(it.errorCode), it.errorMessage) },
+        )
+        return response
     }
 }
