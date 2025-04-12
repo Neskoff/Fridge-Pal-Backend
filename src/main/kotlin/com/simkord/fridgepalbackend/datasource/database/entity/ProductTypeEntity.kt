@@ -1,6 +1,6 @@
 package com.simkord.fridgepalbackend.datasource.database.entity
 
-import com.simkord.fridgepalbackend.datasource.database.enums.ProductTypeEnum
+import com.simkord.fridgepalbackend.datasource.database.enums.DatabaseProductType
 import jakarta.persistence.*
 
 @Entity
@@ -19,5 +19,5 @@ class ProductTypeEntity {
 
     @Column(name = "name", nullable = false)
     @Enumerated(EnumType.STRING)
-    var name: ProductTypeEnum? = null
+    var name: DatabaseProductType? = null
 }

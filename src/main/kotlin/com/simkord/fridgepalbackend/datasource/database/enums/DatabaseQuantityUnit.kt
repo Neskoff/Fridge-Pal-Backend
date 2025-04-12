@@ -1,6 +1,6 @@
 package com.simkord.fridgepalbackend.datasource.database.enums
 
-enum class QuantityUnitEnum {
+enum class DatabaseQuantityUnit {
     KILOGRAM,
     LITER,
     PIECE,
