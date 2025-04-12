@@ -1,21 +1,37 @@
 package com.simkord.fridgepalbackend.application.controller
 
 import com.simkord.fridgepalbackend.application.response.ProductResponse
-import com.simkord.fridgepalbackend.service.ProductService
-import org.springframework.http.HttpStatus
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
 
-@RestController
-@RequestMapping("api/v1/products")
-class ProductsController(
-    private val productService: ProductService,
-) {
-
-    @GetMapping
-    fun getProducts(): ResponseEntity<List<ProductResponse>> {
-        return ResponseEntity(productService.getProducts(), HttpStatus.OK)
-    }
+@Tag(name = "Product Controller", description = "Retrieve, add, and modify existing products in the fridge")
+interface ProductsController {
+    @Operation(
+        summary = "Retrieve products",
+        description = "Return products currently stored in the fridge",
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Products successfully retrieved",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(
+                            type = "array",
+                            implementation = ProductResponse::class,
+                            example = "[{\"name\":\"Bananas\",\"type\":\"Fruit\",\"quantity\":1.5,\"quantityUnit\":\"kilograms\",\"storedDate\":\"2025-04-12\",\"expiryDate\":\"2025-04-19\"}]",
+                        ),
+                    ),
+                ],
+            ),
+        ],
+    )
+    fun getProducts(): ResponseEntity<List<ProductResponse>>
 }
