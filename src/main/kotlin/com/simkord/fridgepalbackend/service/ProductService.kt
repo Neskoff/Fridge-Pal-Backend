@@ -1,22 +1,16 @@
 package com.simkord.fridgepalbackend.service
 
-import com.simkord.fridgepalbackend.application.response.ProductResponse
+import com.simkord.fridgepalbackend.datasource.ProductDataSource
+import com.simkord.fridgepalbackend.service.mapper.toProductList
+import com.simkord.fridgepalbackend.service.model.Product
 import org.springframework.stereotype.Service
-import java.time.LocalDate
 
 @Service
-class ProductService {
+class ProductService(
+    private val productDataSource: ProductDataSource,
+) {
 
-    fun getProducts(): List<ProductResponse> {
-        return listOf(
-            ProductResponse(
-                name = "Bananas",
-                type = "Fruit",
-                quantity = 1.5,
-                quantityUnit = "kilograms",
-                storedDate = LocalDate.now(),
-                expiryDate = LocalDate.now().plusDays(7),
-            ),
-        )
+    fun getProducts(): MutableList<Product> {
+        return productDataSource.getProducts().toProductList()
     }
 }

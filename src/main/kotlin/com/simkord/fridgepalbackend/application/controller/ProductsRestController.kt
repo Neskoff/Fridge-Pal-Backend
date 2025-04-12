@@ -1,6 +1,7 @@
 package com.simkord.fridgepalbackend.application.controller
 
 import com.simkord.fridgepalbackend.application.response.ProductResponse
+import com.simkord.fridgepalbackend.application.response.toProductResponseList
 import com.simkord.fridgepalbackend.service.ProductService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -16,6 +17,6 @@ class ProductsRestController(
 
     @GetMapping
     override fun getProducts(): ResponseEntity<List<ProductResponse>> {
-        return ResponseEntity(productService.getProducts(), HttpStatus.OK)
+        return ResponseEntity(productService.getProducts().toProductResponseList(), HttpStatus.OK)
     }
 }
