@@ -4,7 +4,7 @@ import com.simkord.fridgepalbackend.datasource.database.enums.ProductTypeEnum
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "products")
+@Table(name = "product_types")
 class ProductTypeEntity {
 
     @Id

@@ -1,5 +1,6 @@
 package com.simkord.fridgepalbackend.application.controller
 
+import com.simkord.fridgepalbackend.application.response.ApiErrorResponse
 import com.simkord.fridgepalbackend.application.response.ProductResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
@@ -7,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 
 @Tag(name = "Product Controller", description = "Retrieve, add, and modify existing products in the fridge")
@@ -28,6 +30,56 @@ interface ProductsController {
                             implementation = ProductResponse::class,
                             example = "[{\"name\":\"Bananas\",\"type\":\"Fruit\",\"quantity\":1.5,\"quantityUnit\":\"kilograms\",\"storedDate\":\"2025-04-12\",\"expiryDate\":\"2025-04-19\"}]",
                         ),
+                    ),
+                ],
+            ),
+            ApiResponse(
+                responseCode = "400",
+                description = "Bad request",
+                content = [
+                    Content(
+                        mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        schema = Schema(implementation = ApiErrorResponse::class),
+                    )
+                ],
+            ),
+            ApiResponse(
+                responseCode = "401",
+                description = "Unauthorized",
+                content = [
+                    Content(
+                        mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        schema = Schema(implementation = ApiErrorResponse::class),
+                    )
+                ],
+            ),
+            ApiResponse(
+                responseCode = "403",
+                description = "Forbidden",
+                content = [
+                    Content(
+                        mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        schema = Schema(implementation = ApiErrorResponse::class),
+                    )
+                ],
+            ),
+            ApiResponse(
+                responseCode = "404",
+                description = "Not Found",
+                content = [
+                    Content(
+                        mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        schema = Schema(implementation = ApiErrorResponse::class),
+                    )
+                ],
+            ),
+            ApiResponse(
+                responseCode = "500",
+                description = "Internal Server Error",
+                content = [
+                    Content(
+                        mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        schema = Schema(implementation = ApiErrorResponse::class),
                     ),
                 ],
             ),
