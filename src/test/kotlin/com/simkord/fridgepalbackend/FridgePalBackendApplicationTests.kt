@@ -9,5 +9,4 @@ class FridgePalBackendApplicationTests {
     @Test
     fun contextLoads() {
     }
-
 }
