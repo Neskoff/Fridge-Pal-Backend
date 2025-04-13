@@ -8,12 +8,6 @@ import jakarta.persistence.*
 class QuantityUnitEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "quantityTypeIdGenerator")
-    @SequenceGenerator(
-        name = "quantityTypeIdGenerator",
-        sequenceName = "quantity_type_id_sequence",
-        allocationSize = 1,
-    )
     @Column(name = "id", nullable = false)
     var id: Long = 0
 

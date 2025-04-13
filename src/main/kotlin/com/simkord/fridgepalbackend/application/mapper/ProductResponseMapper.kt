@@ -10,9 +10,9 @@ fun List<Product>.toProductResponseList(): MutableList<ProductResponse> {
 fun Product.toProductResponse(): ProductResponse {
     return ProductResponse(
         name = name,
-        type = type,
+        type = type.label,
         quantity = quantity,
-        quantityUnit = quantityUnit,
+        quantityUnit = quantityUnit.label,
         storedDate = storedDate,
         expiryDate = expiryDate,
     )

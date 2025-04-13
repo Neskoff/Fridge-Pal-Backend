@@ -20,4 +20,13 @@ class ProductDatabaseDataSource(
             failure = { Err(DatasourceError(500, it.message)) },
         )
     }
+
+    override fun saveProduct(product: ProductEntity): Result<ProductEntity, DatasourceError> {
+        return runCatching {
+            productJpaRepository.save(product)
+        }.fold(
+            success = { Ok(it) },
+            failure = { Err(DatasourceError(500, it.message)) },
+        )
+    }
 }

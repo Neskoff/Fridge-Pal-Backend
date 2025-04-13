@@ -7,4 +7,6 @@ import com.simkord.fridgepalbackend.datasource.database.model.DatasourceError
 interface ProductDataSource {
 
     fun getProducts(): Result<MutableList<ProductEntity>, DatasourceError>
+
+    fun saveProduct(product: ProductEntity): Result<ProductEntity, DatasourceError>
 }
