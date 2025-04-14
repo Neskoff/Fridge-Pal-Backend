@@ -5,6 +5,7 @@ import com.simkord.fridgepalbackend.datasource.ProductDataSource
 import com.simkord.fridgepalbackend.datasource.database.entity.ProductEntity
 import com.simkord.fridgepalbackend.datasource.database.jpa.ProductJpaRepository
 import com.simkord.fridgepalbackend.datasource.database.model.DatasourceError
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 
 @Component
@@ -17,7 +18,7 @@ class ProductDatabaseDataSource(
             productJpaRepository.findAll()
         }.fold(
             success = { Ok(it) },
-            failure = { Err(DatasourceError(500, it.message)) },
+            failure = { Err(DatasourceError(HttpStatus.INTERNAL_SERVER_ERROR.value(), it.message)) },
         )
     }
 
@@ -26,7 +27,7 @@ class ProductDatabaseDataSource(
             productJpaRepository.save(product)
         }.fold(
             success = { Ok(it) },
-            failure = { Err(DatasourceError(500, it.message)) },
+            failure = { Err(DatasourceError(HttpStatus.INTERNAL_SERVER_ERROR.value(), it.message)) },
         )
     }
 }

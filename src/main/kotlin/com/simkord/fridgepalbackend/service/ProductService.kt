@@ -8,6 +8,7 @@ import com.simkord.fridgepalbackend.service.mapper.toProductList
 import com.simkord.fridgepalbackend.service.mapper.toServiceError
 import com.simkord.fridgepalbackend.service.model.Product
 import com.simkord.fridgepalbackend.service.model.ServiceError
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 
 @Service
@@ -27,7 +28,8 @@ class ProductService(
             product.toProductEntity()
         }.fold(
             success = { it },
-            failure = { return@saveProduct Err(ServiceError(400, "Invalid Product Details ${it.message}")) },
+            failure = { return@saveProduct Err(ServiceError(HttpStatus.BAD_REQUEST.value()
+                , "Invalid Product Details ${it.message}")) },
         )
         return productDataSource.saveProduct(productEntity).fold(
             success = { Ok(it.toProduct()) },
