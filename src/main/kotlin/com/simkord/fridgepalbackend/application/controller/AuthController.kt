@@ -1,46 +1,201 @@
 package com.simkord.fridgepalbackend.application.controller
 
-import com.github.michaelbull.result.fold
 import com.simkord.fridgepalbackend.application.AuthRequest
-import com.simkord.fridgepalbackend.application.exception.FridgePalException
+import com.simkord.fridgepalbackend.application.response.ApiErrorResponse
 import com.simkord.fridgepalbackend.application.response.TokenResponse
-import com.simkord.fridgepalbackend.application.security.JwtUtil
-import com.simkord.fridgepalbackend.service.AppUserService
 import com.simkord.fridgepalbackend.service.model.AppUser
-import org.springframework.http.HttpStatus
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.ExampleObject
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
 
-@RestController
-@RequestMapping("/auth")
-class AuthController(
-    private val authenticationManager: AuthenticationManager,
-    private val jwtUtil: JwtUtil,
-    private val passwordEncoder: PasswordEncoder,
-    private val appUserService: AppUserService,
-) {
-
-    @PostMapping("/login")
-    fun login(@RequestBody request: AuthRequest): ResponseEntity<TokenResponse> {
-        val authToken = UsernamePasswordAuthenticationToken(request.username, request.password)
-        authenticationManager.authenticate(authToken)
-        return ResponseEntity(TokenResponse(jwtUtil.generateToken(request.username)), HttpStatus.OK)
-    }
-
-    @PostMapping("/register")
-    fun register(@RequestBody request: AuthRequest): ResponseEntity<AppUser> {
-        val encodedPassword = passwordEncoder.encode(request.password)
-        val response = appUserService.registerUser(request.username, encodedPassword).fold(
-            success = { it },
-            failure = { throw FridgePalException(HttpStatus.valueOf(it.errorCode), it.errorMessage) },
+@Tag(name = "Auth Controller", description = "Register new or login as existing user")
+interface AuthController {
+    @Operation(
+        summary = "Login",
+        description = "Login as an existing user",
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "User successfully logged in",
+                content = [
+                    Content(
+                        mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        schema = Schema(
+                            implementation = TokenResponse::class,
+                            example = TOKEN_EXAMPLE,
+                        ),
+                    ),
+                ],
+            ),
+            ApiResponse(
+                responseCode = "400",
+                description = "Bad request",
+                content = [
+                    Content(
+                        mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        schema = Schema(implementation = ApiErrorResponse::class),
+                        examples = [ExampleObject(EXAMPLE_ERROR)],
+                    ),
+                ],
+            ),
+            ApiResponse(
+                responseCode = "401",
+                description = "Unauthorized",
+                content = [
+                    Content(
+                        mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        schema = Schema(implementation = ApiErrorResponse::class),
+                        examples = [ExampleObject(EXAMPLE_ERROR)],
+                    ),
+                ],
+            ),
+            ApiResponse(
+                responseCode = "403",
+                description = "Forbidden",
+                content = [
+                    Content(
+                        mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        schema = Schema(implementation = ApiErrorResponse::class),
+                        examples = [ExampleObject(EXAMPLE_ERROR)],
+                    ),
+                ],
+            ),
+            ApiResponse(
+                responseCode = "404",
+                description = "Not Found",
+                content = [
+                    Content(
+                        mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        schema = Schema(implementation = ApiErrorResponse::class),
+                        examples = [ExampleObject(EXAMPLE_ERROR)],
+                    ),
+                ],
+            ),
+            ApiResponse(
+                responseCode = "500",
+                description = "Internal Server Error",
+                content = [
+                    Content(
+                        mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        schema = Schema(implementation = ApiErrorResponse::class),
+                        examples = [ExampleObject(EXAMPLE_ERROR)],
+                    ),
+                ],
+            ),
+        ],
+    )
+    fun login(
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "User Request Object",
+            required = true,
+            content = [
+                Content(
+                    schema = Schema(implementation = AuthRequest::class),
+                ),
+            ],
         )
+        @RequestBody request: AuthRequest,
+    ): ResponseEntity<TokenResponse>
 
-        return ResponseEntity(response, HttpStatus.CREATED)
+    @Operation(
+        summary = "Register",
+        description = "Register new user",
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "User successfully registered",
+                content = [
+                    Content(
+                        mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        schema = Schema(
+                            implementation = AppUser::class,
+                        ),
+                    ),
+                ],
+            ),
+            ApiResponse(
+                responseCode = "400",
+                description = "Bad request",
+                content = [
+                    Content(
+                        mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        schema = Schema(implementation = ApiErrorResponse::class),
+                        examples = [ExampleObject(EXAMPLE_ERROR)],
+                    ),
+                ],
+            ),
+            ApiResponse(
+                responseCode = "401",
+                description = "Unauthorized",
+                content = [
+                    Content(
+                        mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        schema = Schema(implementation = ApiErrorResponse::class),
+                        examples = [ExampleObject(EXAMPLE_ERROR)],
+                    ),
+                ],
+            ),
+            ApiResponse(
+                responseCode = "403",
+                description = "Forbidden",
+                content = [
+                    Content(
+                        mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        schema = Schema(implementation = ApiErrorResponse::class),
+                        examples = [ExampleObject(EXAMPLE_ERROR)],
+                    ),
+                ],
+            ),
+            ApiResponse(
+                responseCode = "404",
+                description = "Not Found",
+                content = [
+                    Content(
+                        mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        schema = Schema(implementation = ApiErrorResponse::class),
+                        examples = [ExampleObject(EXAMPLE_ERROR)],
+                    ),
+                ],
+            ),
+            ApiResponse(
+                responseCode = "500",
+                description = "Internal Server Error",
+                content = [
+                    Content(
+                        mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        schema = Schema(implementation = ApiErrorResponse::class),
+                        examples = [ExampleObject(EXAMPLE_ERROR)],
+                    ),
+                ],
+            ),
+        ],
+    )
+    fun register(
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "User Request Object",
+            required = true,
+            content = [
+                Content(
+                    schema = Schema(implementation = AuthRequest::class),
+                ),
+            ],
+        )
+        @RequestBody request: AuthRequest,
+    ): ResponseEntity<AppUser>
+
+    companion object {
+        private const val TOKEN_EXAMPLE = "{\"token\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbGlqYSIsImlhdCI6MTc0NDYzODU3MywiZXhwIjoxNzQ0NjQyMTczfQ.MS65GTeSFCUBteva3EfvkwxOY-2eoHmKPGU9ozXcUa0\"}"
+        private const val EXAMPLE_ERROR = "{\"timestamp\":\"2024-04-14T10:00:00Z\",\"status\":400,\"error\":\"Bad Request\",\"message\":\"Invalid input\",\"path\":\"/api/example\",\"errorCode\":\"INVALID_INPUT\"}"
     }
 }
