@@ -1,8 +1,8 @@
 package com.simkord.fridgepalbackend.application.controller
 
 import com.github.michaelbull.result.fold
-import com.simkord.fridgepalbackend.application.AuthRequest
 import com.simkord.fridgepalbackend.application.exception.FridgePalException
+import com.simkord.fridgepalbackend.application.request.AuthRequest
 import com.simkord.fridgepalbackend.application.response.TokenResponse
 import com.simkord.fridgepalbackend.application.security.JwtUtil
 import com.simkord.fridgepalbackend.service.AppUserService
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("api/v1/auth")
+@RequestMapping("/api/v1/auth")
 class AuthRestController(
     private val authenticationManager: AuthenticationManager,
     private val jwtUtil: JwtUtil,

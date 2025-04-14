@@ -31,6 +31,7 @@ fun Product.toProductEntity(): ProductEntity {
     val databaseProduct = ProductEntity()
     val databaseProductType = ProductTypeEntity()
     val databaseQuantityUnit = QuantityUnitEntity()
+    databaseProduct.id = id
     databaseProductType.id = type.id
     databaseProductType.name = type.toDatabaseProductType()
     databaseQuantityUnit.id = quantityUnit.id

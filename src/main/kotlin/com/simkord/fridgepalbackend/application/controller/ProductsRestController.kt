@@ -2,11 +2,12 @@ package com.simkord.fridgepalbackend.application.controller
 
 import com.github.michaelbull.result.fold
 import com.simkord.fridgepalbackend.application.exception.FridgePalException
+import com.simkord.fridgepalbackend.application.mapper.toProduct
 import com.simkord.fridgepalbackend.application.mapper.toProductResponse
 import com.simkord.fridgepalbackend.application.mapper.toProductResponseList
+import com.simkord.fridgepalbackend.application.request.ProductRequest
 import com.simkord.fridgepalbackend.application.response.ProductResponse
 import com.simkord.fridgepalbackend.service.ProductService
-import com.simkord.fridgepalbackend.service.model.Product
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -27,8 +28,8 @@ class ProductsRestController(
     }
 
     @PostMapping
-    override fun saveProduct(productRequest: Product): ResponseEntity<ProductResponse> {
-        val response = productService.saveProduct(productRequest).fold(
+    override fun saveProduct(productRequest: ProductRequest): ResponseEntity<ProductResponse> {
+        val response = productService.saveProduct(productRequest.toProduct()).fold(
             success = { ResponseEntity(it.toProductResponse(), HttpStatus.CREATED) },
             failure = { throw FridgePalException(HttpStatus.valueOf(it.errorCode), it.errorMessage) },
         )
@@ -41,6 +42,19 @@ class ProductsRestController(
             success = { ResponseEntity(Unit, HttpStatus.NO_CONTENT) },
             failure = { throw FridgePalException(HttpStatus.valueOf(it.errorCode), it.errorMessage) },
         )
+        return response
+    }
+
+    @PutMapping("/{productId}")
+    override fun updateProduct(productRequest: ProductRequest, @PathVariable productId: Long): ResponseEntity<ProductResponse> {
+        val product = productRequest.toProduct()
+        product.id = productId
+
+        val response = productService.updateProduct(product).fold(
+            success = { ResponseEntity(it.toProductResponse(), HttpStatus.OK) },
+            failure = { throw FridgePalException(HttpStatus.valueOf(it.errorCode), it.errorMessage) },
+        )
+
         return response
     }
 }

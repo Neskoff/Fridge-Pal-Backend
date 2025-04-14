@@ -1,4 +1,4 @@
-package com.simkord.fridgepalbackend.configuration
+package com.simkord.fridgepalbackend.application.configuration
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType

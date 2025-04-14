@@ -24,31 +24,44 @@ class ProductService(
     }
 
     fun saveProduct(product: Product): Result<Product, ServiceError> {
-        val productEntity = runCatching {
-            product.toProductEntity()
-        }.fold(
-            success = { it },
-            failure = { return@saveProduct Err(ServiceError(HttpStatus.BAD_REQUEST.value(), "Invalid Product Details ${it.message}")) },
+        return productDataSource.saveProduct(product.toProductEntity()).fold(
+            success = { Ok(it.toProduct()) },
+            failure = { Err(it.toServiceError()) },
         )
-        return productDataSource.saveProduct(productEntity).fold(
+    }
+
+    fun updateProduct(product: Product): Result<Product, ServiceError> {
+        checkProductExistsById(product.id).onFailure {
+            return@updateProduct Err(it)
+        }
+
+        return productDataSource.saveProduct(product.toProductEntity()).fold(
             success = { Ok(it.toProduct()) },
             failure = { Err(it.toServiceError()) },
         )
     }
 
     fun deleteProduct(productId: Long): Result<Unit, ServiceError> {
-        val productExists = productDataSource.productExistsById(productId).fold(
-            success = { it },
-            failure = { return@deleteProduct Err(it.toServiceError()) },
-        )
-
-        if (!productExists) {
-            return Err(ServiceError(HttpStatus.NOT_FOUND.value(), "Product Not Found"))
+        checkProductExistsById(productId).onFailure {
+            return@deleteProduct Err(it)
         }
 
         return productDataSource.deleteProductById(productId).fold(
             success = { Ok(Unit) },
             failure = { Err(it.toServiceError()) },
         )
+    }
+
+    private fun checkProductExistsById(productId: Long): Result<Unit, ServiceError> {
+        val productExists = productDataSource.productExistsById(productId).fold(
+            success = { it },
+            failure = { return@checkProductExistsById Err(it.toServiceError()) },
+        )
+
+        if (!productExists) {
+            return Err(ServiceError(HttpStatus.NOT_FOUND.value(), "Product Not Found for the id $productId"))
+        }
+
+        return Ok(Unit)
     }
 }

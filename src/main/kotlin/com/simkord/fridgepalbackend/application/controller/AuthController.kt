@@ -1,6 +1,6 @@
 package com.simkord.fridgepalbackend.application.controller
 
-import com.simkord.fridgepalbackend.application.AuthRequest
+import com.simkord.fridgepalbackend.application.request.AuthRequest
 import com.simkord.fridgepalbackend.application.response.ApiErrorResponse
 import com.simkord.fridgepalbackend.application.response.TokenResponse
 import com.simkord.fridgepalbackend.service.model.AppUser

@@ -1,11 +1,10 @@
-package com.simkord.fridgepalbackend.service.model
+package com.simkord.fridgepalbackend.application.request
 
 import com.simkord.fridgepalbackend.service.enums.ProductType
 import com.simkord.fridgepalbackend.service.enums.QuantityUnit
 import java.time.LocalDate
 
-data class Product(
-    var id: Long,
+data class ProductRequest(
     val name: String,
     val type: ProductType,
     val quantity: Double,
