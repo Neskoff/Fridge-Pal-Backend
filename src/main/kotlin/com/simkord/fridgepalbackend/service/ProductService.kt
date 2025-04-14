@@ -35,4 +35,20 @@ class ProductService(
             failure = { Err(it.toServiceError()) },
         )
     }
+
+    fun deleteProduct(productId: Long): Result<Unit, ServiceError> {
+        val productExists = productDataSource.productExistsById(productId).fold(
+            success = { it },
+            failure = { return@deleteProduct Err(it.toServiceError()) },
+        )
+
+        if (!productExists) {
+            return Err(ServiceError(HttpStatus.NOT_FOUND.value(), "Product Not Found"))
+        }
+
+        return productDataSource.deleteProductById(productId).fold(
+            success = { Ok(Unit) },
+            failure = { Err(it.toServiceError()) },
+        )
+    }
 }

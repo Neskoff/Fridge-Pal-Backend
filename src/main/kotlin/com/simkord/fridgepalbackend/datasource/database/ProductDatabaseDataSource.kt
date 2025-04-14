@@ -18,7 +18,7 @@ class ProductDatabaseDataSource(
             productJpaRepository.findAll()
         }.fold(
             success = { Ok(it) },
-            failure = { Err(DatasourceError(HttpStatus.INTERNAL_SERVER_ERROR.value(), it.message)) },
+            failure = { Err(DatasourceError(HttpStatus.INTERNAL_SERVER_ERROR.value(), UNEXPECTED_DATABASE_ERROR_MESSAGE)) },
         )
     }
 
@@ -27,7 +27,29 @@ class ProductDatabaseDataSource(
             productJpaRepository.save(product)
         }.fold(
             success = { Ok(it) },
-            failure = { Err(DatasourceError(HttpStatus.INTERNAL_SERVER_ERROR.value(), it.message)) },
+            failure = { Err(DatasourceError(HttpStatus.INTERNAL_SERVER_ERROR.value(), UNEXPECTED_DATABASE_ERROR_MESSAGE)) },
         )
+    }
+
+    override fun deleteProductById(productId: Long): Result<Unit, DatasourceError> {
+        return runCatching {
+            productJpaRepository.deleteById(productId)
+        }.fold(
+            success = { Ok(Unit) },
+            failure = { Err(DatasourceError(HttpStatus.INTERNAL_SERVER_ERROR.value(), UNEXPECTED_DATABASE_ERROR_MESSAGE)) },
+        )
+    }
+
+    override fun productExistsById(productId: Long): Result<Boolean, DatasourceError> {
+        return runCatching {
+            productJpaRepository.existsById(productId)
+        }.fold(
+            success = { Ok(it) },
+            failure = { Err(DatasourceError(HttpStatus.INTERNAL_SERVER_ERROR.value(), UNEXPECTED_DATABASE_ERROR_MESSAGE)) },
+        )
+    }
+
+    companion object {
+        private const val UNEXPECTED_DATABASE_ERROR_MESSAGE = "Unexpected database error"
     }
 }

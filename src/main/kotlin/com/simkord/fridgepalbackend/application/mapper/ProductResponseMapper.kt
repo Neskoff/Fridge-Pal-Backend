@@ -9,6 +9,7 @@ fun List<Product>.toProductResponseList(): MutableList<ProductResponse> {
 
 fun Product.toProductResponse(): ProductResponse {
     return ProductResponse(
+        id = id,
         name = name,
         type = type.label,
         quantity = quantity,

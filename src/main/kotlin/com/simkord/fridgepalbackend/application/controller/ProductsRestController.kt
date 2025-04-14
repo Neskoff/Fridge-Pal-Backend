@@ -9,10 +9,7 @@ import com.simkord.fridgepalbackend.service.ProductService
 import com.simkord.fridgepalbackend.service.model.Product
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("api/v1/products")
@@ -33,6 +30,15 @@ class ProductsRestController(
     override fun saveProduct(productRequest: Product): ResponseEntity<ProductResponse> {
         val response = productService.saveProduct(productRequest).fold(
             success = { ResponseEntity(it.toProductResponse(), HttpStatus.CREATED) },
+            failure = { throw FridgePalException(HttpStatus.valueOf(it.errorCode), it.errorMessage) },
+        )
+        return response
+    }
+
+    @DeleteMapping("/{productId}")
+    override fun deleteProduct(@PathVariable productId: Long): ResponseEntity<Unit> {
+        val response = productService.deleteProduct(productId).fold(
+            success = { ResponseEntity(Unit, HttpStatus.NO_CONTENT) },
             failure = { throw FridgePalException(HttpStatus.valueOf(it.errorCode), it.errorMessage) },
         )
         return response

@@ -9,4 +9,8 @@ interface ProductDataSource {
     fun getProducts(): Result<MutableList<ProductEntity>, DatasourceError>
 
     fun saveProduct(product: ProductEntity): Result<ProductEntity, DatasourceError>
+
+    fun deleteProductById(productId: Long): Result<Unit, DatasourceError>
+
+    fun productExistsById(productId: Long): Result<Boolean, DatasourceError>
 }

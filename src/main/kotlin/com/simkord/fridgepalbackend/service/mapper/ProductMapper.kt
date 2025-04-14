@@ -17,6 +17,7 @@ fun List<ProductEntity>.toProductList(): MutableList<Product> {
 
 fun ProductEntity.toProduct(): Product {
     return Product(
+        id = id,
         name = name,
         type = productType!!.name!!.toProductType(),
         quantity = quantity,

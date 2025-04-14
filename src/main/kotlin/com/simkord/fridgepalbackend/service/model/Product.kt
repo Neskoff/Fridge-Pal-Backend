@@ -5,6 +5,7 @@ import com.simkord.fridgepalbackend.service.enums.QuantityUnit
 import java.time.LocalDate
 
 data class Product(
+    val id: Long,
     val name: String,
     val type: ProductType,
     val quantity: Double,
