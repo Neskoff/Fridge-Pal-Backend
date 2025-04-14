@@ -28,8 +28,7 @@ class ProductService(
             product.toProductEntity()
         }.fold(
             success = { it },
-            failure = { return@saveProduct Err(ServiceError(HttpStatus.BAD_REQUEST.value()
-                , "Invalid Product Details ${it.message}")) },
+            failure = { return@saveProduct Err(ServiceError(HttpStatus.BAD_REQUEST.value(), "Invalid Product Details ${it.message}")) },
         )
         return productDataSource.saveProduct(productEntity).fold(
             success = { Ok(it.toProduct()) },

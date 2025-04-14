@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository
 import java.util.Optional
 
 @Repository
-interface AppUserJpaRepository: JpaRepository<AppUserEntity, Long> {
+interface AppUserJpaRepository : JpaRepository<AppUserEntity, Long> {
     fun findByUsername(username: String): Optional<AppUserEntity>
+    fun existsByUsername(username: String): Boolean
 }

@@ -10,3 +10,12 @@ fun AppUserEntity.toAppUser(): AppUser {
         userRole = role,
     )
 }
+
+fun AppUser.toAppUserEntity(): AppUserEntity {
+    val user = AppUserEntity()
+    user.username = username
+    user.password = password
+    user.role = userRole
+
+    return user
+}

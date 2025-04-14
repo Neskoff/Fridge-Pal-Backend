@@ -6,4 +6,8 @@ import com.simkord.fridgepalbackend.datasource.database.model.DatasourceError
 
 interface AppUserDataSource {
     fun loadUserByUsername(username: String): Result<AppUserEntity, DatasourceError>
+
+    fun saveUser(user: AppUserEntity): Result<AppUserEntity, DatasourceError>
+
+    fun existsByUsername(username: String): Result<Boolean, DatasourceError>
 }

@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 class SecurityConfig(
     private val jwtAuthFilter: JwtAuthFilter,
-    private val userDetailsService: UserDetailsService
+    private val userDetailsService: UserDetailsService,
 ) {
 
     @Bean
@@ -30,7 +30,7 @@ class SecurityConfig(
                     "/swagger-ui/**",
                     "/v3/api-docs/**",
                     "/webjars/**",
-                    "/swagger-resources/**"
+                    "/swagger-resources/**",
                 ).permitAll()
                     .anyRequest().authenticated()
             }
@@ -40,7 +40,6 @@ class SecurityConfig(
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
             .build()
     }
-
 
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
