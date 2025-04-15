@@ -9,8 +9,10 @@ import com.simkord.fridgepalbackend.application.request.ProductRequest
 import com.simkord.fridgepalbackend.application.response.ProductResponse
 import com.simkord.fridgepalbackend.service.ProductService
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping("api/v1/products")
@@ -51,6 +53,16 @@ class ProductsRestController(
         product.id = productId
 
         val response = productService.updateProduct(product).fold(
+            success = { ResponseEntity(it.toProductResponse(), HttpStatus.OK) },
+            failure = { throw FridgePalException(HttpStatus.valueOf(it.errorCode), it.errorMessage) },
+        )
+
+        return response
+    }
+
+    @PutMapping("/image/{productId}", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    fun updateProductImage(@RequestParam("file") file: MultipartFile, @PathVariable productId: Long): ResponseEntity<ProductResponse> {
+        val response = productService.updateProductImage(file, productId).fold(
             success = { ResponseEntity(it.toProductResponse(), HttpStatus.OK) },
             failure = { throw FridgePalException(HttpStatus.valueOf(it.errorCode), it.errorMessage) },
         )

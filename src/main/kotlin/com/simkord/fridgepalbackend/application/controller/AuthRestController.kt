@@ -2,14 +2,16 @@ package com.simkord.fridgepalbackend.application.controller
 
 import com.github.michaelbull.result.fold
 import com.simkord.fridgepalbackend.application.exception.FridgePalException
+import com.simkord.fridgepalbackend.application.mapper.toAppUserResponse
 import com.simkord.fridgepalbackend.application.request.AuthRequest
+import com.simkord.fridgepalbackend.application.response.AppUserResponse
 import com.simkord.fridgepalbackend.application.response.TokenResponse
 import com.simkord.fridgepalbackend.application.security.JwtUtil
 import com.simkord.fridgepalbackend.service.AppUserService
-import com.simkord.fridgepalbackend.service.model.AppUser
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.PostMapping
@@ -29,15 +31,23 @@ class AuthRestController(
     @PostMapping("/login")
     override fun login(@RequestBody request: AuthRequest): ResponseEntity<TokenResponse> {
         val authToken = UsernamePasswordAuthenticationToken(request.username, request.password)
-        authenticationManager.authenticate(authToken)
-        return ResponseEntity(TokenResponse(jwtUtil.generateToken(request.username)), HttpStatus.OK)
+        return runCatching {
+            val authResponse = authenticationManager.authenticate(authToken)
+            ResponseEntity(TokenResponse(jwtUtil.generateToken(authResponse)), HttpStatus.OK)
+        }.getOrElse { exception ->
+            when {
+                exception is BadCredentialsException || exception.cause is BadCredentialsException ->
+                    throw FridgePalException(HttpStatus.UNAUTHORIZED, exception.message)
+                else -> throw exception
+            }
+        }
     }
 
     @PostMapping("/register")
-    override fun register(@RequestBody request: AuthRequest): ResponseEntity<AppUser> {
+    override fun register(@RequestBody request: AuthRequest): ResponseEntity<AppUserResponse> {
         val encodedPassword = passwordEncoder.encode(request.password)
         val response = appUserService.registerUser(request.username, encodedPassword).fold(
-            success = { it },
+            success = { it.toAppUserResponse() },
             failure = { throw FridgePalException(HttpStatus.valueOf(it.errorCode), it.errorMessage) },
         )
 

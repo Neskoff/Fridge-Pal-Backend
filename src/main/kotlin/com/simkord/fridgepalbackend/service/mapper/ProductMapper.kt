@@ -24,6 +24,7 @@ fun ProductEntity.toProduct(): Product {
         quantityUnit = quantityUnit!!.name!!.toQuantityUnit(),
         storedDate = storedDate,
         expiryDate = expiryDate,
+        imageUrl = imageUrl,
     )
 }
 
@@ -42,6 +43,7 @@ fun Product.toProductEntity(): ProductEntity {
     databaseProduct.quantityUnit = databaseQuantityUnit
     databaseProduct.storedDate = storedDate
     databaseProduct.expiryDate = expiryDate
+    databaseProduct.imageUrl = imageUrl
 
     return databaseProduct
 }

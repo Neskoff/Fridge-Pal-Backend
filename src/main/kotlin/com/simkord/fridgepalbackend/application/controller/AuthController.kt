@@ -2,14 +2,15 @@ package com.simkord.fridgepalbackend.application.controller
 
 import com.simkord.fridgepalbackend.application.request.AuthRequest
 import com.simkord.fridgepalbackend.application.response.ApiErrorResponse
+import com.simkord.fridgepalbackend.application.response.AppUserResponse
 import com.simkord.fridgepalbackend.application.response.TokenResponse
-import com.simkord.fridgepalbackend.service.model.AppUser
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.ExampleObject
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -119,7 +120,7 @@ interface AuthController {
                     Content(
                         mediaType = MediaType.APPLICATION_JSON_VALUE,
                         schema = Schema(
-                            implementation = AppUser::class,
+                            implementation = AppUserResponse::class,
                         ),
                     ),
                 ],
@@ -181,6 +182,7 @@ interface AuthController {
             ),
         ],
     )
+    @SecurityRequirement(name = "bearerAuth")
     fun register(
         @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "User Request Object",
@@ -192,7 +194,7 @@ interface AuthController {
             ],
         )
         @RequestBody request: AuthRequest,
-    ): ResponseEntity<AppUser>
+    ): ResponseEntity<AppUserResponse>
 
     companion object {
         private const val TOKEN_EXAMPLE = "{\"token\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbGlqYSIsImlhdCI6MTc0NDYzODU3MywiZXhwIjoxNzQ0NjQyMTczfQ.MS65GTeSFCUBteva3EfvkwxOY-2eoHmKPGU9ozXcUa0\"}"

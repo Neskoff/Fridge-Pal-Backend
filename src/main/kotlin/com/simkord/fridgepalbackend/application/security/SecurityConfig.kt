@@ -23,13 +23,14 @@ class SecurityConfig(
         return http.csrf { it.disable() }
             .authorizeHttpRequests {
                 it.requestMatchers(
-                    "/api/v1/auth/**",
+                    "/api/v1/auth/login",
                     "/swagger-ui.html",
                     "/swagger-ui/**",
                     "/v3/api-docs/**",
                     "/webjars/**",
                     "/swagger-resources/**",
                 ).permitAll()
+                    .requestMatchers("/api/v1/auth/register").hasRole("ADMIN")
                     .anyRequest().authenticated()
             }
             .sessionManagement {

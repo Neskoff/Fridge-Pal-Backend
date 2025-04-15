@@ -49,6 +49,15 @@ class ProductDatabaseDataSource(
         )
     }
 
+    override fun getProductById(productId: Long): Result<ProductEntity, DatasourceError> {
+        return runCatching {
+            productJpaRepository.findById(productId)
+        }.fold(
+            success = { Ok(it.get()) },
+            failure = { Err(DatasourceError(HttpStatus.INTERNAL_SERVER_ERROR.value(), UNEXPECTED_DATABASE_ERROR_MESSAGE)) },
+        )
+    }
+
     companion object {
         private const val UNEXPECTED_DATABASE_ERROR_MESSAGE = "Unexpected database error"
     }

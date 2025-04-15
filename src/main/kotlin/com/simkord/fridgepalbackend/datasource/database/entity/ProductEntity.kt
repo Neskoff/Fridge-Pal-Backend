@@ -35,4 +35,7 @@ class ProductEntity {
 
     @Column(name = "expiry_date", nullable = false)
     var expiryDate: LocalDate = LocalDate.now()
+
+    @Column(name = "image_url", nullable = true)
+    var imageUrl: String? = ""
 }

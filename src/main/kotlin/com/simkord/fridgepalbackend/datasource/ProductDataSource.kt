@@ -13,4 +13,6 @@ interface ProductDataSource {
     fun deleteProductById(productId: Long): Result<Unit, DatasourceError>
 
     fun productExistsById(productId: Long): Result<Boolean, DatasourceError>
+
+    fun getProductById(productId: Long): Result<ProductEntity, DatasourceError>
 }

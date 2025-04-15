@@ -17,12 +17,12 @@ fun Product.toProductResponse(): ProductResponse {
         quantityUnit = quantityUnit.label,
         storedDate = storedDate,
         expiryDate = expiryDate,
+        imageUrl = imageUrl,
     )
 }
 
 fun ProductRequest.toProduct(): Product {
     return Product(
-        id = 0,
         name = name,
         type = type,
         quantity = quantity,

@@ -10,4 +10,5 @@ data class ProductResponse(
     val quantityUnit: String,
     val storedDate: LocalDate,
     val expiryDate: LocalDate,
+    var imageUrl: String?,
 )

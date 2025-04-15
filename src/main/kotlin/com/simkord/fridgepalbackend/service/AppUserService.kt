@@ -13,6 +13,7 @@ import com.simkord.fridgepalbackend.service.mapper.toServiceError
 import com.simkord.fridgepalbackend.service.model.AppUser
 import com.simkord.fridgepalbackend.service.model.ServiceError
 import org.springframework.http.HttpStatus
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Service
 
@@ -24,7 +25,12 @@ class AppUserService(
     override fun loadUserByUsername(username: String): AppUser {
         val user = appUserDataSource.loadUserByUsername(username).fold(
             success = { it },
-            failure = { throw FridgePalException(HttpStatus.valueOf(it.errorCode), it.errorMessage) },
+            failure = {
+                if (it.errorCode == HttpStatus.NOT_FOUND.value()) {
+                    throw BadCredentialsException("Invalid user credentials")
+                }
+                throw FridgePalException(HttpStatus.valueOf(it.errorCode), it.errorMessage)
+            },
         )
         return user.toAppUser()
     }
