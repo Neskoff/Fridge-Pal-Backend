@@ -1,11 +1,10 @@
 package com.simkord.fridgepalbackend.application.controller
 
+import com.simkord.fridgepalbackend.application.annotation.StandardErrorResponses
 import com.simkord.fridgepalbackend.application.request.ProductRequest
-import com.simkord.fridgepalbackend.application.response.ApiErrorResponse
 import com.simkord.fridgepalbackend.application.response.ProductResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
-import io.swagger.v3.oas.annotations.media.ExampleObject
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -14,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.multipart.MultipartFile
 
 @Tag(name = "Product Controller", description = "Retrieve, add, and modify existing products in the fridge")
 @SecurityRequirement(name = "bearerAuth")
@@ -38,63 +38,9 @@ interface ProductsController {
                     ),
                 ],
             ),
-            ApiResponse(
-                responseCode = "400",
-                description = "Bad request",
-                content = [
-                    Content(
-                        mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        schema = Schema(implementation = ApiErrorResponse::class),
-                        examples = [ExampleObject(EXAMPLE_ERROR)],
-                    ),
-                ],
-            ),
-            ApiResponse(
-                responseCode = "401",
-                description = "Unauthorized",
-                content = [
-                    Content(
-                        mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        schema = Schema(implementation = ApiErrorResponse::class),
-                        examples = [ExampleObject(EXAMPLE_ERROR)],
-                    ),
-                ],
-            ),
-            ApiResponse(
-                responseCode = "403",
-                description = "Forbidden",
-                content = [
-                    Content(
-                        mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        schema = Schema(implementation = ApiErrorResponse::class),
-                        examples = [ExampleObject(EXAMPLE_ERROR)],
-                    ),
-                ],
-            ),
-            ApiResponse(
-                responseCode = "404",
-                description = "Not Found",
-                content = [
-                    Content(
-                        mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        schema = Schema(implementation = ApiErrorResponse::class),
-                        examples = [ExampleObject(EXAMPLE_ERROR)],
-                    ),
-                ],
-            ),
-            ApiResponse(
-                responseCode = "500",
-                description = "Internal Server Error",
-                content = [
-                    Content(
-                        mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        schema = Schema(implementation = ApiErrorResponse::class),
-                        examples = [ExampleObject(EXAMPLE_ERROR)],
-                    ),
-                ],
-            ),
         ],
     )
+    @StandardErrorResponses
     fun getProducts(): ResponseEntity<MutableList<ProductResponse>>
 
     @Operation(
@@ -116,63 +62,9 @@ interface ProductsController {
                     ),
                 ],
             ),
-            ApiResponse(
-                responseCode = "400",
-                description = "Bad request",
-                content = [
-                    Content(
-                        mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        schema = Schema(implementation = ApiErrorResponse::class),
-                        examples = [ExampleObject(EXAMPLE_ERROR)],
-                    ),
-                ],
-            ),
-            ApiResponse(
-                responseCode = "401",
-                description = "Unauthorized",
-                content = [
-                    Content(
-                        mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        schema = Schema(implementation = ApiErrorResponse::class),
-                        examples = [ExampleObject(EXAMPLE_ERROR)],
-                    ),
-                ],
-            ),
-            ApiResponse(
-                responseCode = "403",
-                description = "Forbidden",
-                content = [
-                    Content(
-                        mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        schema = Schema(implementation = ApiErrorResponse::class),
-                        examples = [ExampleObject(EXAMPLE_ERROR)],
-                    ),
-                ],
-            ),
-            ApiResponse(
-                responseCode = "404",
-                description = "Not Found",
-                content = [
-                    Content(
-                        mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        schema = Schema(implementation = ApiErrorResponse::class),
-                        examples = [ExampleObject(EXAMPLE_ERROR)],
-                    ),
-                ],
-            ),
-            ApiResponse(
-                responseCode = "500",
-                description = "Internal Server Error",
-                content = [
-                    Content(
-                        mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        schema = Schema(implementation = ApiErrorResponse::class),
-                        examples = [ExampleObject(EXAMPLE_ERROR)],
-                    ),
-                ],
-            ),
         ],
     )
+    @StandardErrorResponses
     fun saveProduct(
         @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Product object to create",
@@ -202,63 +94,9 @@ interface ProductsController {
                     ),
                 ],
             ),
-            ApiResponse(
-                responseCode = "400",
-                description = "Bad request",
-                content = [
-                    Content(
-                        mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        schema = Schema(implementation = ApiErrorResponse::class),
-                        examples = [ExampleObject(EXAMPLE_ERROR)],
-                    ),
-                ],
-            ),
-            ApiResponse(
-                responseCode = "401",
-                description = "Unauthorized",
-                content = [
-                    Content(
-                        mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        schema = Schema(implementation = ApiErrorResponse::class),
-                        examples = [ExampleObject(EXAMPLE_ERROR)],
-                    ),
-                ],
-            ),
-            ApiResponse(
-                responseCode = "403",
-                description = "Forbidden",
-                content = [
-                    Content(
-                        mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        schema = Schema(implementation = ApiErrorResponse::class),
-                        examples = [ExampleObject(EXAMPLE_ERROR)],
-                    ),
-                ],
-            ),
-            ApiResponse(
-                responseCode = "404",
-                description = "Not Found",
-                content = [
-                    Content(
-                        mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        schema = Schema(implementation = ApiErrorResponse::class),
-                        examples = [ExampleObject(EXAMPLE_ERROR)],
-                    ),
-                ],
-            ),
-            ApiResponse(
-                responseCode = "500",
-                description = "Internal Server Error",
-                content = [
-                    Content(
-                        mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        schema = Schema(implementation = ApiErrorResponse::class),
-                        examples = [ExampleObject(EXAMPLE_ERROR)],
-                    ),
-                ],
-            ),
         ],
     )
+    @StandardErrorResponses
     fun deleteProduct(productId: Long): ResponseEntity<Unit>
 
     @Operation(
@@ -280,63 +118,9 @@ interface ProductsController {
                     ),
                 ],
             ),
-            ApiResponse(
-                responseCode = "400",
-                description = "Bad request",
-                content = [
-                    Content(
-                        mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        schema = Schema(implementation = ApiErrorResponse::class),
-                        examples = [ExampleObject(EXAMPLE_ERROR)],
-                    ),
-                ],
-            ),
-            ApiResponse(
-                responseCode = "401",
-                description = "Unauthorized",
-                content = [
-                    Content(
-                        mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        schema = Schema(implementation = ApiErrorResponse::class),
-                        examples = [ExampleObject(EXAMPLE_ERROR)],
-                    ),
-                ],
-            ),
-            ApiResponse(
-                responseCode = "403",
-                description = "Forbidden",
-                content = [
-                    Content(
-                        mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        schema = Schema(implementation = ApiErrorResponse::class),
-                        examples = [ExampleObject(EXAMPLE_ERROR)],
-                    ),
-                ],
-            ),
-            ApiResponse(
-                responseCode = "404",
-                description = "Not Found",
-                content = [
-                    Content(
-                        mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        schema = Schema(implementation = ApiErrorResponse::class),
-                        examples = [ExampleObject(EXAMPLE_ERROR)],
-                    ),
-                ],
-            ),
-            ApiResponse(
-                responseCode = "500",
-                description = "Internal Server Error",
-                content = [
-                    Content(
-                        mediaType = MediaType.APPLICATION_JSON_VALUE,
-                        schema = Schema(implementation = ApiErrorResponse::class),
-                        examples = [ExampleObject(EXAMPLE_ERROR)],
-                    ),
-                ],
-            ),
         ],
     )
+    @StandardErrorResponses
     fun updateProduct(
         @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Product object to update",
@@ -352,8 +136,32 @@ interface ProductsController {
         productId: Long,
     ): ResponseEntity<ProductResponse>
 
+    @Operation(
+        summary = "Update a product image",
+        description = "Update a product in image",
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Product image successfully updated",
+                content = [
+                    Content(
+                        mediaType = MediaType.APPLICATION_JSON_VALUE,
+                        schema = Schema(
+                            implementation = ProductResponse::class,
+                            example = PRODUCT_EXAMPLE,
+                        ),
+                    ),
+                ],
+            ),
+        ],
+    )
+    @StandardErrorResponses
+    fun updateProductImage(file: MultipartFile, productId: Long): ResponseEntity<ProductResponse>
+
+
     companion object {
         private const val PRODUCT_EXAMPLE = "[{\"name\":\"Bananas\",\"type\":\"Fruits\",\"quantity\":1.5,\"quantityUnit\":\"kilograms\",\"storedDate\":\"2025-04-12\",\"expiryDate\":\"2025-04-19\"}]"
-        private const val EXAMPLE_ERROR = "{\"timestamp\":\"2024-04-14T10:00:00Z\",\"status\":400,\"error\":\"Bad Request\",\"message\":\"Invalid input\",\"path\":\"/api/example\",\"errorCode\":\"INVALID_INPUT\"}"
     }
 }

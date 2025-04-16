@@ -55,7 +55,7 @@ class ProductsRestController(
     }
 
     @PutMapping("/image/{productId}", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun updateProductImage(@RequestParam("file") file: MultipartFile, @PathVariable productId: Long): ResponseEntity<ProductResponse> {
+    override fun updateProductImage(@RequestParam("file") file: MultipartFile, @PathVariable productId: Long): ResponseEntity<ProductResponse> {
         return productService.updateProductImage(file, productId).toMappedResponseEntity(
             transform = { it.toProductResponse() },
             successStatus = HttpStatus.OK,
