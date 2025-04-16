@@ -1,7 +1,6 @@
 package com.simkord.fridgepalbackend.application.controller
 
-import com.github.michaelbull.result.fold
-import com.simkord.fridgepalbackend.application.exception.FridgePalException
+import com.simkord.fridgepalbackend.application.mapper.toMappedResponseEntity
 import com.simkord.fridgepalbackend.application.mapper.toProduct
 import com.simkord.fridgepalbackend.application.mapper.toProductResponse
 import com.simkord.fridgepalbackend.application.mapper.toProductResponseList
@@ -22,29 +21,26 @@ class ProductsRestController(
 
     @GetMapping
     override fun getProducts(): ResponseEntity<MutableList<ProductResponse>> {
-        val response = productService.getProducts().fold(
-            success = { ResponseEntity(it.toProductResponseList(), HttpStatus.OK) },
-            failure = { throw FridgePalException(HttpStatus.valueOf(it.errorCode), it.errorMessage) },
+        return productService.getProducts().toMappedResponseEntity(
+            transform = { it.toProductResponseList() },
+            successStatus = HttpStatus.OK,
         )
-        return response
     }
 
     @PostMapping
     override fun saveProduct(productRequest: ProductRequest): ResponseEntity<ProductResponse> {
-        val response = productService.saveProduct(productRequest.toProduct()).fold(
-            success = { ResponseEntity(it.toProductResponse(), HttpStatus.CREATED) },
-            failure = { throw FridgePalException(HttpStatus.valueOf(it.errorCode), it.errorMessage) },
+        return productService.saveProduct(productRequest.toProduct()).toMappedResponseEntity(
+            transform = { it.toProductResponse() },
+            successStatus = HttpStatus.CREATED,
         )
-        return response
     }
 
     @DeleteMapping("/{productId}")
     override fun deleteProduct(@PathVariable productId: Long): ResponseEntity<Unit> {
-        val response = productService.deleteProduct(productId).fold(
-            success = { ResponseEntity(Unit, HttpStatus.NO_CONTENT) },
-            failure = { throw FridgePalException(HttpStatus.valueOf(it.errorCode), it.errorMessage) },
+        return productService.deleteProduct(productId).toMappedResponseEntity(
+            transform = { },
+            successStatus = HttpStatus.NO_CONTENT,
         )
-        return response
     }
 
     @PutMapping("/{productId}")
@@ -52,21 +48,17 @@ class ProductsRestController(
         val product = productRequest.toProduct()
         product.id = productId
 
-        val response = productService.updateProduct(product).fold(
-            success = { ResponseEntity(it.toProductResponse(), HttpStatus.OK) },
-            failure = { throw FridgePalException(HttpStatus.valueOf(it.errorCode), it.errorMessage) },
+        return productService.updateProduct(product).toMappedResponseEntity(
+            transform = { it.toProductResponse() },
+            successStatus = HttpStatus.OK,
         )
-
-        return response
     }
 
     @PutMapping("/image/{productId}", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun updateProductImage(@RequestParam("file") file: MultipartFile, @PathVariable productId: Long): ResponseEntity<ProductResponse> {
-        val response = productService.updateProductImage(file, productId).fold(
-            success = { ResponseEntity(it.toProductResponse(), HttpStatus.OK) },
-            failure = { throw FridgePalException(HttpStatus.valueOf(it.errorCode), it.errorMessage) },
+        return productService.updateProductImage(file, productId).toMappedResponseEntity(
+            transform = { it.toProductResponse() },
+            successStatus = HttpStatus.OK,
         )
-
-        return response
     }
 }

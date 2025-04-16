@@ -1,8 +1,8 @@
 package com.simkord.fridgepalbackend.application.controller
 
-import com.github.michaelbull.result.fold
 import com.simkord.fridgepalbackend.application.exception.FridgePalException
 import com.simkord.fridgepalbackend.application.mapper.toAppUserResponse
+import com.simkord.fridgepalbackend.application.mapper.toMappedResponseEntity
 import com.simkord.fridgepalbackend.application.request.AuthRequest
 import com.simkord.fridgepalbackend.application.response.AppUserResponse
 import com.simkord.fridgepalbackend.application.response.TokenResponse
@@ -46,11 +46,10 @@ class AuthRestController(
     @PostMapping("/register")
     override fun register(@RequestBody request: AuthRequest): ResponseEntity<AppUserResponse> {
         val encodedPassword = passwordEncoder.encode(request.password)
-        val response = appUserService.registerUser(request.username, encodedPassword).fold(
-            success = { it.toAppUserResponse() },
-            failure = { throw FridgePalException(HttpStatus.valueOf(it.errorCode), it.errorMessage) },
-        )
 
-        return ResponseEntity(response, HttpStatus.CREATED)
+        return appUserService.registerUser(request.username, encodedPassword).toMappedResponseEntity(
+            transform = { it.toAppUserResponse() },
+            successStatus = HttpStatus.CREATED,
+        )
     }
 }

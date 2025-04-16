@@ -8,5 +8,4 @@ data class ApiErrorResponse(
     val error: String,
     val message: String?,
     val path: String,
-    val errorCode: String? = null,
 )

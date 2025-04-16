@@ -2,10 +2,7 @@ package com.simkord.fridgepalbackend.service
 
 import com.github.michaelbull.result.*
 import com.simkord.fridgepalbackend.datasource.ProductDataSource
-import com.simkord.fridgepalbackend.service.mapper.toProduct
-import com.simkord.fridgepalbackend.service.mapper.toProductEntity
-import com.simkord.fridgepalbackend.service.mapper.toProductList
-import com.simkord.fridgepalbackend.service.mapper.toServiceError
+import com.simkord.fridgepalbackend.service.mapper.*
 import com.simkord.fridgepalbackend.service.model.Product
 import com.simkord.fridgepalbackend.service.model.ServiceError
 import org.springframework.http.HttpStatus
@@ -19,17 +16,11 @@ class ProductService(
 ) {
 
     fun getProducts(): Result<MutableList<Product>, ServiceError> {
-        return productDataSource.getProducts().fold(
-            success = { Ok(it.toProductList()) },
-            failure = { Err(it.toServiceError()) },
-        )
+        return productDataSource.getProducts().mapToServiceResult { it.toProductList() }
     }
 
     fun saveProduct(product: Product): Result<Product, ServiceError> {
-        return productDataSource.saveProduct(product.toProductEntity()).fold(
-            success = { Ok(it.toProduct()) },
-            failure = { Err(it.toServiceError()) },
-        )
+        return productDataSource.saveProduct(product.toProductEntity()).mapToServiceResult { it.toProduct() }
     }
 
     fun updateProduct(product: Product): Result<Product, ServiceError> {
@@ -37,10 +28,7 @@ class ProductService(
             return@updateProduct Err(it)
         }
 
-        return productDataSource.saveProduct(product.toProductEntity()).fold(
-            success = { Ok(it.toProduct()) },
-            failure = { Err(it.toServiceError()) },
-        )
+        return productDataSource.saveProduct(product.toProductEntity()).mapToServiceResult { it.toProduct() }
     }
 
     fun deleteProduct(productId: Long): Result<Unit, ServiceError> {
@@ -48,10 +36,7 @@ class ProductService(
             return@deleteProduct Err(it)
         }
 
-        return productDataSource.deleteProductById(productId).fold(
-            success = { Ok(Unit) },
-            failure = { Err(it.toServiceError()) },
-        )
+        return productDataSource.deleteProductById(productId).mapToServiceResult { }
     }
 
     fun updateProductImage(image: MultipartFile, productId: Long): Result<Product, ServiceError> {
@@ -71,10 +56,7 @@ class ProductService(
 
         product.imageUrl = imageUrl
 
-        return productDataSource.saveProduct(product.toProductEntity()).fold(
-            success = { Ok(it.toProduct()) },
-            failure = { Err(it.toServiceError()) },
-        )
+        return productDataSource.saveProduct(product.toProductEntity()).mapToServiceResult { it.toProduct() }
     }
 
     private fun checkProductExistsById(productId: Long): Result<Unit, ServiceError> {
