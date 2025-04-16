@@ -7,6 +7,7 @@ import com.simkord.fridgepalbackend.datasource.database.jpa.ProductJpaRepository
 import com.simkord.fridgepalbackend.datasource.database.mapper.toDatasourceResult
 import com.simkord.fridgepalbackend.datasource.database.model.DatasourceError
 import org.springframework.stereotype.Component
+import java.util.Optional
 
 @Component
 class ProductDatabaseDataSource(
@@ -29,7 +30,7 @@ class ProductDatabaseDataSource(
         return runCatching { productJpaRepository.existsById(productId) }.toDatasourceResult()
     }
 
-    override fun getProductById(productId: Long): Result<ProductEntity, DatasourceError> {
-        return runCatching { productJpaRepository.findById(productId).get() }.toDatasourceResult()
+    override fun getProductById(productId: Long): Result<Optional<ProductEntity>, DatasourceError> {
+        return runCatching { productJpaRepository.findById(productId) }.toDatasourceResult()
     }
 }

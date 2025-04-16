@@ -3,6 +3,7 @@ package com.simkord.fridgepalbackend.datasource
 import com.github.michaelbull.result.Result
 import com.simkord.fridgepalbackend.datasource.database.entity.ProductEntity
 import com.simkord.fridgepalbackend.datasource.database.model.DatasourceError
+import java.util.Optional
 
 interface ProductDataSource {
 
@@ -14,5 +15,5 @@ interface ProductDataSource {
 
     fun productExistsById(productId: Long): Result<Boolean, DatasourceError>
 
-    fun getProductById(productId: Long): Result<ProductEntity, DatasourceError>
+    fun getProductById(productId: Long): Result<Optional<ProductEntity>, DatasourceError>
 }

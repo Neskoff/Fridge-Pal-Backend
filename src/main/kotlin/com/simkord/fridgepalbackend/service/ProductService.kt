@@ -40,23 +40,25 @@ class ProductService(
     }
 
     fun updateProductImage(image: MultipartFile, productId: Long): Result<Product, ServiceError> {
-        checkProductExistsById(productId).onFailure {
+        val product = productDataSource.getProductById(productId).fold(
+            success = { it },
+            failure = { return@updateProductImage Err(it.toServiceError()) },
+        )
+
+        verifyProductExists(product.isPresent, productId).onFailure {
             return@updateProductImage Err(it)
         }
 
-        val product = productDataSource.getProductById(productId).fold(
-            success = { it.toProduct() },
-            failure = { return@updateProductImage Err(it.toServiceError()) },
-        )
+        val existingProduct = product.get()
 
         val imageUrl = cloudinaryService.uploadImageToCloudinary(image).fold(
             success = { it },
             failure = { return@updateProductImage Err(it) },
         )
 
-        product.imageUrl = imageUrl
+        existingProduct.imageUrl = imageUrl
 
-        return productDataSource.saveProduct(product.toProductEntity()).mapToServiceResult { it.toProduct() }
+        return productDataSource.saveProduct(existingProduct).mapToServiceResult { it.toProduct() }
     }
 
     private fun checkProductExistsById(productId: Long): Result<Unit, ServiceError> {
@@ -64,7 +66,11 @@ class ProductService(
             success = { it },
             failure = { return@checkProductExistsById Err(it.toServiceError()) },
         )
+        return verifyProductExists(productExists, productId)
 
+    }
+
+    private fun verifyProductExists(productExists: Boolean, productId: Long): Result<Unit, ServiceError> {
         if (!productExists) {
             return Err(ServiceError(HttpStatus.NOT_FOUND.value(), "Product Not Found for the id $productId"))
         }

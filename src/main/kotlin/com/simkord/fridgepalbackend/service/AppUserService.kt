@@ -18,12 +18,12 @@ class AppUserService(
 ) : UserDetailsService {
 
     override fun loadUserByUsername(username: String): AppUser {
-        val userExists = appUserDataSource.existsByUsername(username).mapWithException { it }
+        val user = appUserDataSource.loadUserByUsername(username).mapWithException { it }
 
-        if (!userExists) {
+        if (!user.isPresent) {
             throw BadCredentialsException(INVALID_USER_CREDENTIALS)
         }
-        return appUserDataSource.loadUserByUsername(username).mapWithException { it.toAppUser() }
+        return user.get().toAppUser()
     }
 
     fun registerUser(username: String, password: String): Result<AppUser, ServiceError> {
