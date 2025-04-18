@@ -41,4 +41,8 @@ class ProductEntity {
 
     @Column(name = "image_id", nullable = true)
     var imageId: String? = ""
+
+    fun isExpired(): Boolean {
+        return expiryDate.isBefore(LocalDate.now())
+    }
 }

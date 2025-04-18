@@ -4,6 +4,7 @@ import com.simkord.fridgepalbackend.application.mapper.toMappedResponseEntity
 import com.simkord.fridgepalbackend.application.mapper.toProduct
 import com.simkord.fridgepalbackend.application.mapper.toProductResponse
 import com.simkord.fridgepalbackend.application.mapper.toProductResponseList
+import com.simkord.fridgepalbackend.application.request.ProductFilters
 import com.simkord.fridgepalbackend.application.request.ProductRequest
 import com.simkord.fridgepalbackend.application.response.ProductResponse
 import com.simkord.fridgepalbackend.service.ProductService
@@ -20,8 +21,8 @@ class ProductsRestController(
 ) : ProductsController {
 
     @GetMapping
-    override fun getProducts(): ResponseEntity<MutableList<ProductResponse>> {
-        return productService.getProducts().toMappedResponseEntity(
+    override fun getProducts(filters: ProductFilters): ResponseEntity<MutableList<ProductResponse>> {
+        return productService.getProducts(filters).toMappedResponseEntity(
             transform = { it.toProductResponseList() },
             successStatus = HttpStatus.OK,
         )

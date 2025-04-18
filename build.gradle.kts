@@ -27,6 +27,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6")
     implementation("com.michael-bull.kotlin-result:kotlin-result:2.0.1")
+    implementation("io.github.oshai:kotlin-logging-jvm:6.0.9")
     implementation("com.cloudinary:cloudinary-http5:2.0.0")
     implementation("com.cloudinary:cloudinary-taglib:2.0.0")
     implementation("io.github.cdimascio:dotenv-java:2.2.4")

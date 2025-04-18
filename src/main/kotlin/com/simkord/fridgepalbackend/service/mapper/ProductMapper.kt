@@ -30,6 +30,7 @@ fun ProductEntity.toProduct(): Product {
         storedDate = storedDate,
         expiryDate = expiryDate,
         productImage = productImage,
+        expired = isExpired(),
     )
 }
 

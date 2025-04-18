@@ -4,6 +4,7 @@ import com.cloudinary.Cloudinary
 import com.github.michaelbull.result.*
 import com.simkord.fridgepalbackend.service.model.ProductImage
 import com.simkord.fridgepalbackend.service.model.ServiceError
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -17,8 +18,9 @@ import org.springframework.web.multipart.MultipartFile
 @Service
 class CloudinaryService(
     private val cloudinary: Cloudinary,
-
 ) {
+    private val logger = KotlinLogging.logger {}
+
     /**
      * Upload image to Cloudinary
      *
@@ -30,7 +32,10 @@ class CloudinaryService(
             cloudinary.uploader().upload(image.bytes, HashMap<Any, Any>())
         }.fold(
             success = { it },
-            failure = { return@uploadImageToCloudinary Err(ServiceError(HttpStatus.INTERNAL_SERVER_ERROR.value(), CLOUDINARY_UPLOAD_ERROR)) },
+            failure = {
+                logger.error { it.message }
+                return@uploadImageToCloudinary Err(ServiceError(HttpStatus.INTERNAL_SERVER_ERROR.value(), CLOUDINARY_UPLOAD_ERROR))
+            },
         )
 
         val publicId = uploadedFile[PUBLIC_ID].toString()
@@ -55,7 +60,10 @@ class CloudinaryService(
             cloudinary.uploader().destroy(imageId, HashMap<Any, Any>())
         }.fold(
             success = { Ok(Unit) },
-            failure = { Err(ServiceError(HttpStatus.INTERNAL_SERVER_ERROR.value(), CLOUDINARY_DELETE_ERROR)) },
+            failure = {
+                logger.error { it.message }
+                return@deleteImageFromCloudinary Err(ServiceError(HttpStatus.INTERNAL_SERVER_ERROR.value(), CLOUDINARY_DELETE_ERROR))
+            },
         )
     }
 

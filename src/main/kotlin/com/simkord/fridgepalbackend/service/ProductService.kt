@@ -1,6 +1,7 @@
 package com.simkord.fridgepalbackend.service
 
 import com.github.michaelbull.result.*
+import com.simkord.fridgepalbackend.application.request.ProductFilters
 import com.simkord.fridgepalbackend.datasource.ProductDataSource
 import com.simkord.fridgepalbackend.service.mapper.*
 import com.simkord.fridgepalbackend.service.model.Product
@@ -15,8 +16,8 @@ class ProductService(
     private val cloudinaryService: CloudinaryService,
 ) {
 
-    fun getProducts(): Result<MutableList<Product>, ServiceError> {
-        return productDataSource.getProducts().mapToServiceResult { it.toProductList() }
+    fun getProducts(filters: ProductFilters): Result<MutableList<Product>, ServiceError> {
+        return productDataSource.getProducts(filters).mapToServiceResult { it.toProductList() }
     }
 
     fun saveProduct(product: Product): Result<Product, ServiceError> {

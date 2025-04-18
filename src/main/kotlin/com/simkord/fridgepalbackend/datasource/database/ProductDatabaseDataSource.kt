@@ -1,6 +1,7 @@
 package com.simkord.fridgepalbackend.datasource.database
 
 import com.github.michaelbull.result.*
+import com.simkord.fridgepalbackend.application.request.ProductFilters
 import com.simkord.fridgepalbackend.datasource.ProductDataSource
 import com.simkord.fridgepalbackend.datasource.database.entity.ProductEntity
 import com.simkord.fridgepalbackend.datasource.database.jpa.ProductJpaRepository
@@ -14,8 +15,9 @@ class ProductDatabaseDataSource(
     private val productJpaRepository: ProductJpaRepository,
 ) : ProductDataSource {
 
-    override fun getProducts(): Result<MutableList<ProductEntity>, DatasourceError> {
-        return runCatching { productJpaRepository.findAll() }.toDatasourceResult()
+    override fun getProducts(filters: ProductFilters): Result<MutableList<ProductEntity>, DatasourceError> {
+        val specification = ProductSpecification.filterBy(filters)
+        return runCatching { productJpaRepository.findAll(specification) }.toDatasourceResult()
     }
 
     override fun saveProduct(product: ProductEntity): Result<ProductEntity, DatasourceError> {

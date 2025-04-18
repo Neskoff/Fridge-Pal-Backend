@@ -1,6 +1,7 @@
 package com.simkord.fridgepalbackend.application.controller
 
 import com.simkord.fridgepalbackend.application.annotation.StandardErrorResponses
+import com.simkord.fridgepalbackend.application.request.ProductFilters
 import com.simkord.fridgepalbackend.application.request.ProductRequest
 import com.simkord.fridgepalbackend.application.response.ProductResponse
 import io.swagger.v3.oas.annotations.Operation
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springdoc.core.annotations.ParameterObject
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestBody
@@ -41,7 +43,7 @@ interface ProductsController {
         ],
     )
     @StandardErrorResponses
-    fun getProducts(): ResponseEntity<MutableList<ProductResponse>>
+    fun getProducts(@ParameterObject filters: ProductFilters): ResponseEntity<MutableList<ProductResponse>>
 
     @Operation(
         summary = "Save a product",

@@ -12,4 +12,5 @@ data class ProductResponse(
     val storedDate: LocalDate,
     val expiryDate: LocalDate,
     var productImage: ProductImage? = null,
+    val expired: Boolean? = null,
 )

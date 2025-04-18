@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.Ok
 import com.simkord.fridgepalbackend.application.mapper.toProduct
+import com.simkord.fridgepalbackend.application.request.ProductFilters
 import com.simkord.fridgepalbackend.service.ProductService
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
@@ -11,9 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.*
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @WebMvcTest(
     controllers = [ProductsRestController::class],
@@ -32,7 +36,7 @@ class ProductsRestControllerTest : NoSecurityTestConfig() {
 
     @Test
     fun `should return 200 when products are successfully retrieved`() {
-        `when`(productService.getProducts()).thenReturn(Ok(mockProductList()))
+        `when`(productService.getProducts(ProductFilters())).thenReturn(Ok(mockProductList()))
 
         mockMvc.get(PRODUCTS_PATH)
             .andExpect { status { isOk() } }
@@ -40,8 +44,19 @@ class ProductsRestControllerTest : NoSecurityTestConfig() {
     }
 
     @Test
+    fun `should return only expired products when expired filter is on`() {
+        `when`(productService.getProducts(ProductFilters(expired = true))).thenReturn(Ok(mockExpiredProductList()))
+
+        mockMvc.get("$PRODUCTS_PATH?expired=true")
+            .andExpect { status { isOk() } }
+            .andExpect { jsonPath("$.length()") { value(1) } }
+            .andExpect { jsonPath("$.[0].name") { value(mockProductName()) } }
+            .andExpect { jsonPath("$.[0].expired") { value(true) } }
+    }
+
+    @Test
     fun `should return 500 when products are not retrieved`() {
-        `when`(productService.getProducts()).thenReturn(Err(mockServiceError500()))
+        `when`(productService.getProducts(ProductFilters())).thenReturn(Err(mockServiceError500()))
 
         mockMvc.get(PRODUCTS_PATH)
             .andExpect { status { isInternalServerError() } }
@@ -78,7 +93,6 @@ class ProductsRestControllerTest : NoSecurityTestConfig() {
         mockMvc.delete("$PRODUCTS_PATH/${mockProductId()}")
             .andExpect { status { isNoContent() } }
     }
-
 
     @Test
     fun `should return 404 when a product is not found in the database`() {
@@ -128,6 +142,38 @@ class ProductsRestControllerTest : NoSecurityTestConfig() {
         }
             .andExpect { status { isInternalServerError() } }
             .andExpect { jsonPath("$.message") { value(mockServiceErrorDescription()) } }
+    }
+
+    @Test
+    fun `should return 200 when an image is uploaded`() {
+        val file = mockFile()
+        `when`(productService.updateProductImage(file, productId = mockProductId())).thenReturn(Ok(mockProduct()))
+
+        mockMvc.perform(
+            multipart("$PRODUCTS_PATH/${mockProductId()}/image")
+                .file(file)
+                .with {
+                    it.method = HttpMethod.PUT.name()
+                    it
+                },
+        )
+            .andExpect(status().isOk)
+    }
+
+    @Test
+    fun `should return 500 when an image is not uploaded`() {
+        val file = mockFile()
+        `when`(productService.updateProductImage(file, productId = mockProductId())).thenReturn(Err(mockServiceError500()))
+
+        mockMvc.perform(
+            multipart("$PRODUCTS_PATH/${mockProductId()}/image")
+                .file(file)
+                .with {
+                    it.method = HttpMethod.PUT.name()
+                    it
+                },
+        )
+            .andExpect(status().isInternalServerError)
     }
 
     @Test

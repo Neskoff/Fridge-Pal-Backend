@@ -13,4 +13,5 @@ data class Product(
     val storedDate: LocalDate,
     val expiryDate: LocalDate,
     var productImage: ProductImage? = null,
+    val expired: Boolean? = null,
 )

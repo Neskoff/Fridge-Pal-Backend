@@ -18,6 +18,7 @@ fun Product.toProductResponse(): ProductResponse {
         storedDate = storedDate,
         expiryDate = expiryDate,
         productImage = productImage,
+        expired = expired,
     )
 }
 

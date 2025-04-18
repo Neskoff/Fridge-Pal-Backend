@@ -5,7 +5,10 @@ import com.github.michaelbull.result.Ok
 import com.github.michaelbull.result.Result
 import com.github.michaelbull.result.fold
 import com.simkord.fridgepalbackend.datasource.database.model.DatasourceError
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.http.HttpStatus
+
+private val logger = KotlinLogging.logger {}
 
 fun <T, R> Result<T, R>.toDatasourceResult(
     errorCode: Int = HttpStatus.INTERNAL_SERVER_ERROR.value(),
@@ -13,7 +16,10 @@ fun <T, R> Result<T, R>.toDatasourceResult(
 ): Result<T, DatasourceError> {
     return this.fold(
         success = { Ok(it) },
-        failure = { Err(DatasourceError(errorCode, errorMessage)) },
+        failure = {
+            logger.error { it }
+            Err(DatasourceError(errorCode, errorMessage))
+        },
     )
 }
 

@@ -6,6 +6,8 @@ import com.simkord.fridgepalbackend.service.enums.QuantityUnit
 import com.simkord.fridgepalbackend.service.model.Product
 import com.simkord.fridgepalbackend.service.model.ServiceError
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
+import org.springframework.mock.web.MockMultipartFile
 import java.time.LocalDate
 
 private const val PRODUCT_ID = 1L
@@ -37,6 +39,7 @@ val product = Product(
     quantityUnit = QuantityUnit.KILOGRAM,
     storedDate = LocalDate.now(),
     expiryDate = LocalDate.now().plusDays(1),
+    expired = false,
 )
 
 val productRequest = ProductRequest(
@@ -50,8 +53,14 @@ val productRequest = ProductRequest(
 
 val productList = mutableListOf(product)
 
+val expiredProductList = mutableListOf(product.copy(expiryDate = LocalDate.now(), expired = true))
+
 fun mockProductList(): MutableList<Product> {
     return productList
+}
+
+fun mockExpiredProductList(): MutableList<Product> {
+    return expiredProductList
 }
 
 fun mockProduct(): Product {
@@ -68,4 +77,13 @@ fun mockServiceError500(): ServiceError {
 
 fun mockServiceError404(): ServiceError {
     return ServiceError(HttpStatus.NOT_FOUND.value(), SERVICE_ERROR)
+}
+
+fun mockFile(): MockMultipartFile {
+    return MockMultipartFile(
+        "file",
+        "image.jpg",
+        MediaType.IMAGE_JPEG_VALUE,
+        "dummy image content".toByteArray(),
+    )
 }
