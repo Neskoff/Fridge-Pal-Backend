@@ -1,5 +1,6 @@
 package com.simkord.fridgepalbackend.application.response
 
+import com.simkord.fridgepalbackend.service.model.ProductImage
 import java.time.LocalDate
 
 data class ProductResponse(
@@ -10,5 +11,5 @@ data class ProductResponse(
     val quantityUnit: String,
     val storedDate: LocalDate,
     val expiryDate: LocalDate,
-    var imageUrl: String?,
+    var productImage: ProductImage? = null,
 )

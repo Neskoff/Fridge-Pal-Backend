@@ -51,12 +51,13 @@ class ProductService(
 
         val existingProduct = product.get()
 
-        val imageUrl = cloudinaryService.uploadImageToCloudinary(image).fold(
+        val uploadedImage = cloudinaryService.uploadImageToCloudinary(image).fold(
             success = { it },
             failure = { return@updateProductImage Err(it) },
         )
 
-        existingProduct.imageUrl = imageUrl
+        existingProduct.imageUrl = uploadedImage.imageUrl
+        existingProduct.imageId = uploadedImage.imageId
 
         return productDataSource.saveProduct(existingProduct).mapToServiceResult { it.toProduct() }
     }
@@ -67,7 +68,13 @@ class ProductService(
             failure = { return@checkProductExistsById Err(it.toServiceError()) },
         )
         return verifyProductExists(productExists, productId)
+    }
 
+    fun deleteProductImage(imageId: String): Result<Unit, ServiceError> {
+        return cloudinaryService.deleteImageFromCloudinary(imageId).fold(
+            success = { Ok(Unit) },
+            failure = { Err(it) },
+        )
     }
 
     private fun verifyProductExists(productExists: Boolean, productId: Long): Result<Unit, ServiceError> {

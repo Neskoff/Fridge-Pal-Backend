@@ -9,6 +9,7 @@ import com.simkord.fridgepalbackend.datasource.database.model.DatasourceError
 import com.simkord.fridgepalbackend.service.enums.ProductType
 import com.simkord.fridgepalbackend.service.enums.QuantityUnit
 import com.simkord.fridgepalbackend.service.model.Product
+import com.simkord.fridgepalbackend.service.model.ProductImage
 import com.simkord.fridgepalbackend.service.model.ServiceError
 
 fun List<ProductEntity>.toProductList(): MutableList<Product> {
@@ -16,6 +17,10 @@ fun List<ProductEntity>.toProductList(): MutableList<Product> {
 }
 
 fun ProductEntity.toProduct(): Product {
+    val productImage = ProductImage(
+        imageUrl = imageUrl,
+        imageId = imageId,
+    )
     return Product(
         id = id,
         name = name,
@@ -24,7 +29,7 @@ fun ProductEntity.toProduct(): Product {
         quantityUnit = quantityUnit!!.name!!.toQuantityUnit(),
         storedDate = storedDate,
         expiryDate = expiryDate,
-        imageUrl = imageUrl,
+        productImage = productImage,
     )
 }
 
@@ -43,7 +48,8 @@ fun Product.toProductEntity(): ProductEntity {
     databaseProduct.quantityUnit = databaseQuantityUnit
     databaseProduct.storedDate = storedDate
     databaseProduct.expiryDate = expiryDate
-    databaseProduct.imageUrl = imageUrl
+    databaseProduct.imageUrl = productImage?.imageUrl
+    databaseProduct.imageId = productImage?.imageId
 
     return databaseProduct
 }

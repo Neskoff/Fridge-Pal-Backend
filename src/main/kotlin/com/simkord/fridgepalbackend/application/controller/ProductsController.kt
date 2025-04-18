@@ -160,6 +160,25 @@ interface ProductsController {
     @StandardErrorResponses
     fun updateProductImage(file: MultipartFile, productId: Long): ResponseEntity<ProductResponse>
 
+    @Operation(
+        summary = "Delete a image",
+        description = "Delete a image",
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "204",
+                description = "Image successfully deleted",
+                content = [
+                    Content(
+                        mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    ),
+                ],
+            ),
+        ],
+    )
+    @StandardErrorResponses
+    fun deleteProductImage(imageId: String): ResponseEntity<Unit>
 
     companion object {
         private const val PRODUCT_EXAMPLE = "[{\"name\":\"Bananas\",\"type\":\"Fruits\",\"quantity\":1.5,\"quantityUnit\":\"kilograms\",\"storedDate\":\"2025-04-12\",\"expiryDate\":\"2025-04-19\"}]"

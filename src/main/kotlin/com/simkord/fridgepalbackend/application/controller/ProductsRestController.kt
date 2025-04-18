@@ -38,7 +38,7 @@ class ProductsRestController(
     @DeleteMapping("/{productId}")
     override fun deleteProduct(@PathVariable productId: Long): ResponseEntity<Unit> {
         return productService.deleteProduct(productId).toMappedResponseEntity(
-            transform = { },
+            transform = {},
             successStatus = HttpStatus.NO_CONTENT,
         )
     }
@@ -54,11 +54,19 @@ class ProductsRestController(
         )
     }
 
-    @PutMapping("/image/{productId}", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    @PutMapping("/{productId}/image", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     override fun updateProductImage(@RequestParam("file") file: MultipartFile, @PathVariable productId: Long): ResponseEntity<ProductResponse> {
         return productService.updateProductImage(file, productId).toMappedResponseEntity(
             transform = { it.toProductResponse() },
             successStatus = HttpStatus.OK,
+        )
+    }
+
+    @DeleteMapping("/image/{imageId}")
+    override fun deleteProductImage(@PathVariable imageId: String): ResponseEntity<Unit> {
+        return productService.deleteProductImage(imageId).toMappedResponseEntity(
+            transform = {},
+            successStatus = HttpStatus.NO_CONTENT,
         )
     }
 }

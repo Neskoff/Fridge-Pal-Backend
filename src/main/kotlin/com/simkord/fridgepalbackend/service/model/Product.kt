@@ -12,5 +12,5 @@ data class Product(
     val quantityUnit: QuantityUnit,
     val storedDate: LocalDate,
     val expiryDate: LocalDate,
-    var imageUrl: String? = null,
+    var productImage: ProductImage? = null,
 )

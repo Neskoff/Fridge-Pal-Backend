@@ -14,9 +14,9 @@ import org.springframework.http.MediaType
         Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
             schema = Schema(implementation = ApiErrorResponse::class),
-            examples = [ExampleObject(EXAMPLE_ERROR)]
-        )
-    ]
+            examples = [ExampleObject(EXAMPLE_ERROR)],
+        ),
+    ],
 )
 @ApiResponse(
     responseCode = "401",
@@ -25,9 +25,9 @@ import org.springframework.http.MediaType
         Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
             schema = Schema(implementation = ApiErrorResponse::class),
-            examples = [ExampleObject(EXAMPLE_ERROR)]
-        )
-    ]
+            examples = [ExampleObject(EXAMPLE_ERROR)],
+        ),
+    ],
 )
 @ApiResponse(
     responseCode = "403",
@@ -36,9 +36,9 @@ import org.springframework.http.MediaType
         Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
             schema = Schema(implementation = ApiErrorResponse::class),
-            examples = [ExampleObject(EXAMPLE_ERROR)]
-        )
-    ]
+            examples = [ExampleObject(EXAMPLE_ERROR)],
+        ),
+    ],
 )
 @ApiResponse(
     responseCode = "404",
@@ -47,9 +47,9 @@ import org.springframework.http.MediaType
         Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
             schema = Schema(implementation = ApiErrorResponse::class),
-            examples = [ExampleObject(EXAMPLE_ERROR)]
-        )
-    ]
+            examples = [ExampleObject(EXAMPLE_ERROR)],
+        ),
+    ],
 )
 @ApiResponse(
     responseCode = "500",
@@ -58,9 +58,9 @@ import org.springframework.http.MediaType
         Content(
             mediaType = MediaType.APPLICATION_JSON_VALUE,
             schema = Schema(implementation = ApiErrorResponse::class),
-            examples = [ExampleObject(EXAMPLE_ERROR)]
-        )
-    ]
+            examples = [ExampleObject(EXAMPLE_ERROR)],
+        ),
+    ],
 )
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)

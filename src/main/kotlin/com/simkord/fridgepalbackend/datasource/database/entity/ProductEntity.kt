@@ -38,4 +38,7 @@ class ProductEntity {
 
     @Column(name = "image_url", nullable = true)
     var imageUrl: String? = ""
+
+    @Column(name = "image_id", nullable = true)
+    var imageId: String? = ""
 }

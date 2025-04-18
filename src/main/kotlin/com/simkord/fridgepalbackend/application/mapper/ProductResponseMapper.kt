@@ -17,7 +17,7 @@ fun Product.toProductResponse(): ProductResponse {
         quantityUnit = quantityUnit.label,
         storedDate = storedDate,
         expiryDate = expiryDate,
-        imageUrl = imageUrl,
+        productImage = productImage,
     )
 }
 
