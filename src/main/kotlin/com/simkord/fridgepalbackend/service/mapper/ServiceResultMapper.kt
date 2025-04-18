@@ -22,3 +22,4 @@ fun <T, R> Result<T, DatasourceError>.mapWithException(transform: (T) -> R): R {
         failure = { throw FridgePalException(HttpStatus.valueOf(it.errorCode), it.errorMessage) },
     )
 }
+

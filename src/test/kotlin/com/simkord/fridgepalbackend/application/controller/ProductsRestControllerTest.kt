@@ -3,11 +3,13 @@ package com.simkord.fridgepalbackend.application.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.Ok
+import com.simkord.fridgepalbackend.*
 import com.simkord.fridgepalbackend.application.mapper.toProduct
 import com.simkord.fridgepalbackend.application.request.ProductFilters
 import com.simkord.fridgepalbackend.service.ProductService
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.`when`
+import org.mockito.kotlin.any
+import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -36,7 +38,7 @@ class ProductsRestControllerTest : NoSecurityTestConfig() {
 
     @Test
     fun `should return 200 when products are successfully retrieved`() {
-        `when`(productService.getProducts(ProductFilters())).thenReturn(Ok(mockProductList()))
+        whenever(productService.getProducts(ProductFilters())).thenReturn(Ok(mockProductList()))
 
         mockMvc.get(PRODUCTS_PATH)
             .andExpect { status { isOk() } }
@@ -45,7 +47,7 @@ class ProductsRestControllerTest : NoSecurityTestConfig() {
 
     @Test
     fun `should return only expired products when expired filter is on`() {
-        `when`(productService.getProducts(ProductFilters(expired = true))).thenReturn(Ok(mockExpiredProductList()))
+        whenever(productService.getProducts(ProductFilters(expired = true))).thenReturn(Ok(mockExpiredProductList()))
 
         mockMvc.get("$PRODUCTS_PATH?expired=true")
             .andExpect { status { isOk() } }
@@ -56,16 +58,16 @@ class ProductsRestControllerTest : NoSecurityTestConfig() {
 
     @Test
     fun `should return 500 when products are not retrieved`() {
-        `when`(productService.getProducts(ProductFilters())).thenReturn(Err(mockServiceError500()))
+        whenever(productService.getProducts(ProductFilters())).thenReturn(Err(mockServiceError500()))
 
         mockMvc.get(PRODUCTS_PATH)
             .andExpect { status { isInternalServerError() } }
-            .andExpect { jsonPath("$.message") { value(mockServiceErrorDescription()) } }
+            .andExpect { jsonPath("$.message") { value(mockGenericErrorDescription()) } }
     }
 
     @Test
     fun `should return 201 when a product is saved in the database`() {
-        `when`(productService.saveProduct(mockProductRequest().toProduct())).thenReturn(Ok(mockProduct()))
+        whenever(productService.saveProduct(mockProductRequest().toProduct())).thenReturn(Ok(mockProduct()))
 
         mockMvc.post(PRODUCTS_PATH) {
             contentType = MediaType.APPLICATION_JSON
@@ -76,19 +78,19 @@ class ProductsRestControllerTest : NoSecurityTestConfig() {
 
     @Test
     fun `should return 500 when a product is not saved in the database`() {
-        `when`(productService.saveProduct(mockProductRequest().toProduct())).thenReturn(Err(mockServiceError500()))
+        whenever(productService.saveProduct(mockProductRequest().toProduct())).thenReturn(Err(mockServiceError500()))
 
         mockMvc.post(PRODUCTS_PATH) {
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(mockProductRequest())
         }
             .andExpect { status { isInternalServerError() } }
-            .andExpect { jsonPath("$.message") { value(mockServiceErrorDescription()) } }
+            .andExpect { jsonPath("$.message") { value(mockGenericErrorDescription()) } }
     }
 
     @Test
     fun `should return 204 when a product is deleted in the database`() {
-        `when`(productService.deleteProduct(mockProductId())).thenReturn(Ok(Unit))
+        whenever(productService.deleteProduct(mockProductId())).thenReturn(Ok(Unit))
 
         mockMvc.delete("$PRODUCTS_PATH/${mockProductId()}")
             .andExpect { status { isNoContent() } }
@@ -96,7 +98,7 @@ class ProductsRestControllerTest : NoSecurityTestConfig() {
 
     @Test
     fun `should return 404 when a product is not found in the database`() {
-        `when`(productService.deleteProduct(mockProductId())).thenReturn(Err(mockServiceError404()))
+        whenever(productService.deleteProduct(mockProductId())).thenReturn(Err(mockServiceError404()))
 
         mockMvc.delete("$PRODUCTS_PATH/${mockProductId()}")
             .andExpect { status { isNotFound() } }
@@ -104,7 +106,7 @@ class ProductsRestControllerTest : NoSecurityTestConfig() {
 
     @Test
     fun `should return 500 when a product is not deleted in the database`() {
-        `when`(productService.deleteProduct(mockProductId())).thenReturn(Err(mockServiceError500()))
+        whenever(productService.deleteProduct(mockProductId())).thenReturn(Err(mockServiceError500()))
 
         mockMvc.delete("$PRODUCTS_PATH/${mockProductId()}")
             .andExpect { status { isInternalServerError() } }
@@ -112,7 +114,7 @@ class ProductsRestControllerTest : NoSecurityTestConfig() {
 
     @Test
     fun `should return 200 when a product is updated in the database`() {
-        `when`(productService.updateProduct(mockProduct())).thenReturn(Ok(mockProduct()))
+        whenever(productService.updateProduct(any())).thenReturn(Ok(mockProduct()))
 
         mockMvc.put("$PRODUCTS_PATH/1") {
             contentType = MediaType.APPLICATION_JSON
@@ -123,7 +125,7 @@ class ProductsRestControllerTest : NoSecurityTestConfig() {
 
     @Test
     fun `should return 404 when a product to update is not found in the database`() {
-        `when`(productService.updateProduct(mockProduct())).thenReturn(Err(mockServiceError404()))
+        whenever(productService.updateProduct(any())).thenReturn(Err(mockServiceError404()))
 
         mockMvc.put("$PRODUCTS_PATH/${mockProductId()}") {
             contentType = MediaType.APPLICATION_JSON
@@ -134,20 +136,20 @@ class ProductsRestControllerTest : NoSecurityTestConfig() {
 
     @Test
     fun `should return 500 when a product is not updated in the database`() {
-        `when`(productService.updateProduct(mockProduct())).thenReturn(Err(mockServiceError500()))
+        whenever(productService.updateProduct(any())).thenReturn(Err(mockServiceError500()))
 
         mockMvc.put("$PRODUCTS_PATH/${mockProductId()}") {
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(mockProductRequest())
         }
             .andExpect { status { isInternalServerError() } }
-            .andExpect { jsonPath("$.message") { value(mockServiceErrorDescription()) } }
+            .andExpect { jsonPath("$.message") { value(mockGenericErrorDescription()) } }
     }
 
     @Test
     fun `should return 200 when an image is uploaded`() {
         val file = mockFile()
-        `when`(productService.updateProductImage(file, productId = mockProductId())).thenReturn(Ok(mockProduct()))
+        whenever(productService.updateProductImage(file, productId = mockProductId())).thenReturn(Ok(mockProduct()))
 
         mockMvc.perform(
             multipart("$PRODUCTS_PATH/${mockProductId()}/image")
@@ -163,7 +165,7 @@ class ProductsRestControllerTest : NoSecurityTestConfig() {
     @Test
     fun `should return 500 when an image is not uploaded`() {
         val file = mockFile()
-        `when`(productService.updateProductImage(file, productId = mockProductId())).thenReturn(Err(mockServiceError500()))
+        whenever(productService.updateProductImage(file, productId = mockProductId())).thenReturn(Err(mockServiceError500()))
 
         mockMvc.perform(
             multipart("$PRODUCTS_PATH/${mockProductId()}/image")
@@ -178,10 +180,18 @@ class ProductsRestControllerTest : NoSecurityTestConfig() {
 
     @Test
     fun `should return 204 when an image is deleted`() {
-        `when`(productService.deleteProductImage(mockImageId())).thenReturn(Ok(Unit))
+        whenever(productService.deleteProductImage(mockProductId())).thenReturn(Ok(Unit))
 
-        mockMvc.delete("$PRODUCTS_PATH/image/${mockProductId()}")
+        mockMvc.delete("$PRODUCTS_PATH/${mockProductId()}/image")
             .andExpect { status { isNoContent() } }
+    }
+
+    @Test
+    fun `should return 500 when an image is not deleted`() {
+        whenever(productService.deleteProductImage(mockProductId())).thenReturn(Err(mockServiceError500()))
+
+        mockMvc.delete("$PRODUCTS_PATH/${mockProductId()}/image")
+            .andExpect { status { isInternalServerError() } }
     }
 
     companion object {

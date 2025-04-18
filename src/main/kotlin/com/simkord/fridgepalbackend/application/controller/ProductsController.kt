@@ -180,7 +180,7 @@ interface ProductsController {
         ],
     )
     @StandardErrorResponses
-    fun deleteProductImage(imageId: String): ResponseEntity<Unit>
+    fun deleteProductImage(productId: Long): ResponseEntity<Unit>
 
     companion object {
         private const val PRODUCT_EXAMPLE = "[{\"name\":\"Bananas\",\"type\":\"Fruits\",\"quantity\":1.5,\"quantityUnit\":\"kilograms\",\"storedDate\":\"2025-04-12\",\"expiryDate\":\"2025-04-19\"}]"

@@ -63,9 +63,9 @@ class ProductsRestController(
         )
     }
 
-    @DeleteMapping("/image/{imageId}")
-    override fun deleteProductImage(@PathVariable imageId: String): ResponseEntity<Unit> {
-        return productService.deleteProductImage(imageId).toMappedResponseEntity(
+    @DeleteMapping("{productId}/image")
+    override fun deleteProductImage(@PathVariable productId: Long): ResponseEntity<Unit> {
+        return productService.deleteProductImage(productId).toMappedResponseEntity(
             transform = {},
             successStatus = HttpStatus.NO_CONTENT,
         )

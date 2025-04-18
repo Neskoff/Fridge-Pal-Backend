@@ -15,15 +15,14 @@ class JwtUtil {
     private val key by lazy {
         Keys.hmacShaKeyFor(secretString.toByteArray(Charsets.UTF_8))
     }
-    private val expiration = 3600000
 
     fun generateToken(auth: Authentication): String {
         val authorities = auth.authorities.map { it.authority }
         return Jwts.builder()
             .setSubject(auth.name)
-            .claim("authorities", authorities)
+            .claim(AUTHORITIES, authorities)
             .setIssuedAt(Date())
-            .setExpiration(Date(System.currentTimeMillis() + expiration))
+            .setExpiration(Date(System.currentTimeMillis() + EXPIRATION))
             .signWith(key)
             .compact()
     }
@@ -44,5 +43,10 @@ class JwtUtil {
         } catch (e: Exception) {
             false
         }
+    }
+
+    companion object {
+        private const val AUTHORITIES = "authorities"
+        private const val EXPIRATION = 3600000
     }
 }

@@ -22,15 +22,8 @@ class SecurityConfig(
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         return http.csrf { it.disable() }
             .authorizeHttpRequests {
-                it.requestMatchers(
-                    "/api/v1/auth/login",
-                    "/swagger-ui.html",
-                    "/swagger-ui/**",
-                    "/v3/api-docs/**",
-                    "/webjars/**",
-                    "/swagger-resources/**",
-                ).permitAll()
-                    .requestMatchers("/api/v1/auth/register").hasRole("ADMIN")
+                it.requestMatchers(*PUBLIC_ROUTES).permitAll()
+                    .requestMatchers(*ADMIN_ROUTES).hasRole(ADMIN_ROLE)
                     .anyRequest().authenticated()
             }
             .sessionManagement {
@@ -46,5 +39,18 @@ class SecurityConfig(
     @Bean
     fun authenticationManager(authenticationConfiguration: AuthenticationConfiguration): AuthenticationManager {
         return authenticationConfiguration.authenticationManager
+    }
+
+    companion object {
+        private val PUBLIC_ROUTES = arrayOf(
+            "/api/v1/auth/login",
+            "/swagger-ui.html",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/webjars/**",
+            "/swagger-resources/**",
+        )
+        private val ADMIN_ROUTES = arrayOf("/api/v1/auth/register")
+        private const val ADMIN_ROLE = "ADMIN"
     }
 }
