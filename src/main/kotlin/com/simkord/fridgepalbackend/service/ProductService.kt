@@ -72,8 +72,8 @@ class ProductService(
 
         val result = productDataSource.saveProduct(existingProduct).mapToServiceResult { it.toProduct() }
 
-        if (result.isErr && uploadedImage.imageId != null) {
-            cloudinaryService.deleteImageFromCloudinary(uploadedImage.imageId)
+        if (result.isErr) {
+            uploadedImage.imageId?.let { cloudinaryService.deleteImageFromCloudinary(it) }
         }
 
         return result
@@ -94,9 +94,7 @@ class ProductService(
             failure = { return@deleteProductImage Err(it) },
         )
 
-        if (existingProduct.imageId == null) {
-            return Err(ServiceError(HttpStatus.NOT_FOUND.value(), "Existing image not found for product $productId"))
-        }
+        existingProduct.imageId ?: buildNotFoundError("Existing image not found for product $productId")
 
         val imageId = existingProduct.imageId!!
 
@@ -116,7 +114,7 @@ class ProductService(
 
     private fun verifyProductExists(productExists: Boolean, productId: Long): Result<Unit, ServiceError> {
         if (!productExists) {
-            return Err(ServiceError(HttpStatus.NOT_FOUND.value(), "Product Not Found for the id $productId"))
+            buildNotFoundError("Product Not Found for the id $productId")
         }
 
         return Ok(Unit)
@@ -133,5 +131,9 @@ class ProductService(
         }
 
         return Ok(product.get())
+    }
+
+    private fun buildNotFoundError(message: String): ServiceError {
+        return ServiceError(HttpStatus.NOT_FOUND.value(), message)
     }
 }

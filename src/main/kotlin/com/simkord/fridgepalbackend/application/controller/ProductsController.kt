@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
 import org.springdoc.core.annotations.ParameterObject
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -43,7 +44,7 @@ interface ProductsController {
         ],
     )
     @StandardErrorResponses
-    fun getProducts(@ParameterObject filters: ProductFilters): ResponseEntity<MutableList<ProductResponse>>
+    fun getProducts(@Valid @ParameterObject filters: ProductFilters): ResponseEntity<MutableList<ProductResponse>>
 
     @Operation(
         summary = "Save a product",
@@ -77,8 +78,7 @@ interface ProductsController {
                     schema = Schema(implementation = ProductRequest::class),
                 ),
             ],
-        )
-        @RequestBody productRequest: ProductRequest,
+        ) @Valid @RequestBody productRequest: ProductRequest,
     ): ResponseEntity<ProductResponse>
 
     @Operation(
