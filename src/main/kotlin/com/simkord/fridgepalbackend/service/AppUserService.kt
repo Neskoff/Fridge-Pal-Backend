@@ -43,6 +43,6 @@ class AppUserService(
     }
 
     companion object {
-        private const val INVALID_USER_CREDENTIALS = "Invalid user credentials"
+        private const val INVALID_USER_CREDENTIALS = "Bad credentials"
     }
 }
