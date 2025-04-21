@@ -65,7 +65,7 @@ listOf(
 ).forEach { taskName ->
     tasks.named(taskName).configure {
         onlyIf {
-            System.getenv("SKIP_KTLINT") != "true"
+            System.getenv("KTLINT_STATUS") != "disabled"
         }
     }
 }
