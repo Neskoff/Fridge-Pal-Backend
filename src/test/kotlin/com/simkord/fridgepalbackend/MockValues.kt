@@ -16,7 +16,7 @@ import com.simkord.fridgepalbackend.service.model.ServiceError
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockMultipartFile
-import java.time.LocalDate
+import java.time.OffsetDateTime
 
 private const val PRODUCT_ID = 1L
 private const val PRODUCT_NAME = "Apples"
@@ -51,8 +51,8 @@ val productEntity = ProductEntity().apply {
         id = PRODUCT_ID
         name = DatabaseQuantityUnit.KILOGRAM
     }
-    storedDate = LocalDate.now()
-    expiryDate = LocalDate.now().plusDays(1)
+    storedDate = OffsetDateTime.now()
+    expiryDate = OffsetDateTime.now().plusDays(1)
 }
 
 val product = productEntity.toProduct()
@@ -62,15 +62,15 @@ val productRequest = ProductRequest(
     type = ProductType.FRUITS,
     quantity = 1.0,
     quantityUnit = QuantityUnit.KILOGRAM,
-    storedDate = LocalDate.now(),
-    expiryDate = LocalDate.now().plusDays(1),
+    storedDate = OffsetDateTime.now(),
+    expiryDate = OffsetDateTime.now().plusDays(1),
 )
 
 val productList = mutableListOf(product)
 
 val productEntityList = mutableListOf(productEntity)
 
-val expiredProductList = mutableListOf(product.copy(expiryDate = LocalDate.now(), expired = true))
+val expiredProductList = mutableListOf(product.copy(expiryDate = OffsetDateTime.now(), expired = true))
 
 fun mockProductList(): MutableList<Product> {
     return productList

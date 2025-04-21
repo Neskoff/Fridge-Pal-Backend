@@ -94,7 +94,9 @@ class ProductService(
             failure = { return@deleteProductImage Err(it) },
         )
 
-        existingProduct.imageId ?: buildNotFoundError("Existing image not found for product $productId")
+        if (existingProduct.imageId == null) {
+            return Err(buildNotFoundError("Existing image not found for product $productId"))
+        }
 
         val imageId = existingProduct.imageId!!
 
@@ -114,7 +116,7 @@ class ProductService(
 
     private fun verifyProductExists(productExists: Boolean, productId: Long): Result<Unit, ServiceError> {
         if (!productExists) {
-            buildNotFoundError("Product Not Found for the id $productId")
+            return Err(buildNotFoundError("Product Not Found for the id $productId"))
         }
 
         return Ok(Unit)

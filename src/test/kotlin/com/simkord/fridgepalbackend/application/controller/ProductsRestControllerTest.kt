@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.michaelbull.result.Err
 import com.github.michaelbull.result.Ok
 import com.simkord.fridgepalbackend.*
-import com.simkord.fridgepalbackend.application.mapper.toProduct
 import com.simkord.fridgepalbackend.application.request.ProductFilters
 import com.simkord.fridgepalbackend.service.ProductService
 import org.junit.jupiter.api.Test
@@ -67,7 +66,7 @@ class ProductsRestControllerTest : NoSecurityTestConfig() {
 
     @Test
     fun `should return 201 when a product is saved in the database`() {
-        whenever(productService.saveProduct(mockProductRequest().toProduct())).thenReturn(Ok(mockProduct()))
+        whenever(productService.saveProduct(any())).thenReturn(Ok(mockProduct()))
 
         mockMvc.post(PRODUCTS_PATH) {
             contentType = MediaType.APPLICATION_JSON
@@ -78,7 +77,7 @@ class ProductsRestControllerTest : NoSecurityTestConfig() {
 
     @Test
     fun `should return 500 when a product is not saved in the database`() {
-        whenever(productService.saveProduct(mockProductRequest().toProduct())).thenReturn(Err(mockServiceError500()))
+        whenever(productService.saveProduct(any())).thenReturn(Err(mockServiceError500()))
 
         mockMvc.post(PRODUCTS_PATH) {
             contentType = MediaType.APPLICATION_JSON
