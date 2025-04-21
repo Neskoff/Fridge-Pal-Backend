@@ -21,6 +21,10 @@ class JwtAuthFilter(
         response: HttpServletResponse,
         filterChain: FilterChain,
     ) {
+        if (request.requestURI.contains("/api/v1/auth/login")) {
+            filterChain.doFilter(request, response)
+            return
+        }
         val authHeader = request.getHeader(AUTHORIZATION_HEADER)
         val token = authHeader?.takeIf { it.startsWith(BEARER) }?.substring(7)
         val username = token?.let { jwtUtil.extractUsername(it) }

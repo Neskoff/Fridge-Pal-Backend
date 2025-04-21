@@ -2,7 +2,7 @@ package com.simkord.fridgepalbackend.service.model
 
 import com.simkord.fridgepalbackend.service.enums.ProductType
 import com.simkord.fridgepalbackend.service.enums.QuantityUnit
-import java.time.LocalDate
+import java.time.OffsetDateTime
 
 data class Product(
     var id: Long = 0,
@@ -10,8 +10,8 @@ data class Product(
     val type: ProductType,
     val quantity: Double,
     val quantityUnit: QuantityUnit,
-    val storedDate: LocalDate,
-    val expiryDate: LocalDate,
+    val storedDate: OffsetDateTime,
+    val expiryDate: OffsetDateTime,
     var productImage: ProductImage? = null,
     val expired: Boolean? = null,
 )

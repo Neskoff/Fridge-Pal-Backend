@@ -1,7 +1,8 @@
 package com.simkord.fridgepalbackend.datasource.database.entity
 
 import jakarta.persistence.*
-import java.time.LocalDate
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 
 @Entity
 @Table(name = "products")
@@ -31,10 +32,10 @@ class ProductEntity {
     var quantityUnit: QuantityUnitEntity? = null
 
     @Column(name = "stored_date", nullable = false)
-    var storedDate: LocalDate = LocalDate.now()
+    var storedDate: OffsetDateTime = OffsetDateTime.now()
 
     @Column(name = "expiry_date", nullable = false)
-    var expiryDate: LocalDate = LocalDate.now()
+    var expiryDate: OffsetDateTime = OffsetDateTime.now()
 
     @Column(name = "image_url", nullable = true)
     var imageUrl: String? = ""
@@ -43,6 +44,6 @@ class ProductEntity {
     var imageId: String? = ""
 
     fun isExpired(): Boolean {
-        return expiryDate.isBefore(LocalDate.now())
+        return expiryDate.isBefore(OffsetDateTime.now(ZoneOffset.UTC))
     }
 }

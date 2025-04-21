@@ -1,11 +1,16 @@
 package com.simkord.fridgepalbackend.application.request
 
 import jakarta.validation.constraints.AssertTrue
-import java.time.LocalDate
+import org.springframework.format.annotation.DateTimeFormat
+import java.time.OffsetDateTime
 
 data class ProductFilters(
-    val storedBefore: LocalDate? = null,
-    val storedAfter: LocalDate? = null,
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    val storedBefore: OffsetDateTime? = null,
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    val storedAfter: OffsetDateTime? = null,
+
     val expired: Boolean? = false,
 ) {
     @get:AssertTrue(message = "storedAfter must be earlier than storedBefore")
