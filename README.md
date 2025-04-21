@@ -42,6 +42,6 @@ This is the backend service for **FridgePal**, a web application that helps user
 
 You can access the Swagger API documentation for **FridgePal** at the following URL:
 
-- [Swagger UI](http://localhost:8080/swagger-ui/index.html)
+- [Swagger UI](https://fridge-pal-backend.onrender.com/swagger-ui/index.html)
 
 This will provide you with an interactive interface to explore and test all available endpoints.
