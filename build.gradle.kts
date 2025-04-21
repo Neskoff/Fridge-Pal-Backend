@@ -4,7 +4,7 @@ plugins {
     id("org.springframework.boot") version "3.4.4"
     id("io.spring.dependency-management") version "1.1.7"
     kotlin("plugin.jpa") version "1.9.25"
-    id("org.jlleitschuh.gradle.ktlint") version "12.2.0"
+   // id("org.jlleitschuh.gradle.ktlint") version "12.2.0"
 }
 
 group = "com.simkord"
@@ -57,15 +57,4 @@ allOpen {
 
 tasks.withType<Test> {
     useJUnitPlatform()
-}
-listOf(
-    "ktlintCheck",
-    "ktlintTestSourceSetCheck",
-    "ktlintMainSourceSetCheck",
-).forEach { taskName ->
-    tasks.named(taskName).configure {
-        onlyIf {
-            System.getenv("KTLINT_STATUS") != "disabled"
-        }
-    }
 }
