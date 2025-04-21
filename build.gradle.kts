@@ -58,3 +58,14 @@ allOpen {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+listOf(
+    "ktlintCheck",
+    "ktlintTestSourceSetCheck",
+    "ktlintMainSourceSetCheck",
+).forEach { taskName ->
+    tasks.named(taskName).configure {
+        onlyIf {
+            System.getenv("SKIP_KTLINT") != "true"
+        }
+    }
+}
