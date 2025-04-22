@@ -47,7 +47,7 @@ ALTER TABLE products
     ADD CONSTRAINT FK_PRODUCTS_ON_QUANTITY_UNIT FOREIGN KEY (quantity_unit_id) REFERENCES quantity_types (id);
 
 INSERT INTO app_users(username, password, role)
-VALUES ('ilija', '$2a$10$.vRoFyHr3ZJdQJI.VQOIlOKOOd7gGwxXUbVucqEekHR1BlLgUQuOW', 'ADMIN');
+VALUES ('coredump-admin', '$2a$10$gOP2I6CCTj2sR96q0t2ESejm4ge4vVtZcWHAdWnMkfWbztEdpNRmC', 'ADMIN');
 
 INSERT INTO product_types VALUES (1, 'FRUITS');
 INSERT INTO product_types VALUES (2, 'VEGETABLES');
