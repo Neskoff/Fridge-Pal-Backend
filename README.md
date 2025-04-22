@@ -1,3 +1,6 @@
+![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![Build](https://github.com/Neskoff/Fridge-Pal-Backend/actions/workflows/ci.yaml/badge.svg)
+
 # 🧊 FridgePal Backend
 
 This is the backend service for **FridgePal**, a web application that helps users track items in their fridge using images. Built with **Spring Boot**, this RESTful API handles image uploads, fridge item management, expiration tracking, and recipe suggestion endpoints.
