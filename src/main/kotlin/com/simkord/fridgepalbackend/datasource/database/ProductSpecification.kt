@@ -4,7 +4,7 @@ import com.simkord.fridgepalbackend.application.request.ProductFilters
 import com.simkord.fridgepalbackend.datasource.database.entity.ProductEntity
 import jakarta.persistence.criteria.Predicate
 import org.springframework.data.jpa.domain.Specification
-import java.time.LocalDate
+import java.time.OffsetDateTime
 
 object ProductSpecification {
 
@@ -22,7 +22,7 @@ object ProductSpecification {
 
             filters.expired?.let {
                 if (it) {
-                    predicates.add(criteriaBuilder.lessThan(root.get("expiryDate"), LocalDate.now()))
+                    predicates.add(criteriaBuilder.lessThan(root.get("expiryDate"), OffsetDateTime.now()))
                 }
             }
 
